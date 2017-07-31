@@ -6,17 +6,18 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : shotgun.py
 # @Software: PyCharm
+import json
+import scrapy
 from bootloader import config
 from scrapy.http import Request
-from scrapy.spider import Spider
 
 __author__ = 'blackmatrix'
 
 
-class AppleSpider(Spider):
+class AppleSpider(scrapy.spiders.Spider):
 
     name = 'apple'
-    allowed_domains = ['www.apple.com']
+    allowed_domains = ['apple.com']
     start_urls = [
         'https://www.apple.com/cn/'
     ]
@@ -36,12 +37,25 @@ class AppleSpider(Spider):
         self.login_url = None
 
     def start_requests(self):
-        return [Request('https://www.apple.com/cn/', meta={'cookiejar': 1}, callback=self.prepare_login)]
+        yield Request(config['APPLE_INDEX'], meta={'cookiejar': 1}, callback=self.get_api_key)
 
-    def prepare_login(self, resp):
+    def get_api_key(self, resp):
         self.api_key = resp.selector.xpath(config['API_KEY_XPATH']).extract()[0]
-        self.login_url = None
-        pass
+        yield Request(config['APPLE_FLYOUT_AJAX'].format(self.api_key), callback=self.get_login_url)
+
+    def get_login_url(self, resp):
+        resp_json = json.loads(resp.body.decode('utf-8'))
+        for item in resp_json.get('links', []):
+            if item.get('type') == 'signIn':
+                self.login_url = item['url']
+                break
+        yield Request(self.login_url, callback=self.login_appleid)
+
+    @staticmethod
+    def login_appleid(resp):
+        # resp = resp.body
+        cookie = resp.headers.getlist('Set-Cookie')
+        print(cookie)
 
     def parse(self, response):
         pass
