@@ -57,8 +57,10 @@ class AppleSpider(scrapy.spiders.Spider):
     def login_appleid(self, resp):
         # 获取当前域名
         hostname = urlsplit(resp.url).hostname
-        yield FormRequest(config['APPLE_SING_IN'].format(hostname), formdata={'login-appleId': 'timcook', 'login-password': 'sla44j1d7lY5B'},
-                    callback=self.test_login, method='POST')
+        yield FormRequest(config['APPLE_SING_IN'].format(hostname),
+                          formdata={'login-appleId': 'timcook', 'login-password': 'sla44j1d7lY5B'},
+                          callback=self.test_login,
+                          method='POST')
 
     def test_login(self, resp):
         print(resp)
