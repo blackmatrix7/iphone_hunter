@@ -30,7 +30,9 @@ class AppleSpider(scrapy.spiders.Spider):
         'Accept-Language': 'en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4',
         'Connection': 'keep-alive',
         'Content-Type': ' application/x-www-form-urlencoded; charset=UTF-8',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/38.0.2125.111 Safari/537.36',
         'Referer': 'https://www.apple.com/cn/'
     }
 
@@ -52,15 +54,16 @@ class AppleSpider(scrapy.spiders.Spider):
             if item.get('type') == 'signIn':
                 self.login_url = item['url']
                 break
-        yield Request(self.login_url, callback=self.login_appleid)
+        yield Request(self.login_url, meta={resp.meta['cookiejar']}, callback=self.login_appleid)
 
     def login_appleid(self, resp):
         # 获取当前域名
         hostname = urlsplit(resp.url).hostname
         yield FormRequest(config['APPLE_SING_IN'].format(hostname),
                           formdata={'login-appleId': 'timcook', 'login-password': 'sla44j1d7lY5B'},
-                          callback=self.test_login,
-                          method='POST')
+                          meta={'cookiejar': resp.meta['cookiejar']},
+                          method='POST',
+                          callback=self.test_login)
 
     def test_login(self, resp):
         print(resp)
