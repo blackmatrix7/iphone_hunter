@@ -6,10 +6,13 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : shotgun.py
 # @Software: PyCharm
+import re
 import json
 import scrapy
+import urllib
+from urllib.parse import urlsplit
 from bootloader import config
-from scrapy.http import Request
+from scrapy.http import Request, FormRequest
 
 __author__ = 'blackmatrix'
 
@@ -51,11 +54,14 @@ class AppleSpider(scrapy.spiders.Spider):
                 break
         yield Request(self.login_url, callback=self.login_appleid)
 
-    @staticmethod
-    def login_appleid(resp):
-        # resp = resp.body
-        cookie = resp.headers.getlist('Set-Cookie')
-        print(cookie)
+    def login_appleid(self, resp):
+        # 获取当前域名
+        hostname = urlsplit(resp.url).hostname
+        yield FormRequest(config['APPLE_SING_IN'].format(hostname), formdata={'login-appleId': 'timcook', 'login-password': 'sla44j1d7lY5B'},
+                    callback=self.test_login, method='POST')
+
+    def test_login(self, resp):
+        print(resp)
 
     def parse(self, response):
         pass

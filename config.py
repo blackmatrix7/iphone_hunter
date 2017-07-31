@@ -13,8 +13,11 @@ class BaseConfig:
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'
+    APPLE_SING_IN = 'https://{}/cn/shop/sentryx/sign_in'
 
     API_KEY_XPATH = '//*[@name="ac-gn-store-key"]/@content'
+    APPLE_ID_XPATH = '//*[@id="sign-in-content"]'
+    APPLE_ID_PASS = '//*[@id="login-password"]'
 
     def __setitem__(self, key, value):
         raise AttributeError
