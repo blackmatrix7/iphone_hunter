@@ -6,14 +6,15 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : shotgun.py
 # @Software: PyCharm
+from bootloader import config
 from scrapy.http import Request
 from scrapy.spider import Spider
-from scrapy.selector import Selector
 
 __author__ = 'blackmatrix'
 
 
 class AppleSpider(Spider):
+
     name = 'apple'
     allowed_domains = ['www.apple.com']
     start_urls = [
@@ -29,13 +30,18 @@ class AppleSpider(Spider):
         'Referer': 'https://www.apple.com/cn/'
     }
 
-    def start_requests(self):
-        return [Request('https://www.apple.com/cn/', meta={'cookiejar': 1}, callback=self.get_login_url)]
+    def __init__(self, name=None, **kwargs):
+        super().__init__(name=name, **kwargs)
+        self.api_key = None
+        self.login_url = None
 
-    @staticmethod
-    def get_login_url(resp):
-        selector = Selector(resp)
-        url = selector.xpath('//*[@id="ac-gn-bagview-content"]').extract()
+    def start_requests(self):
+        return [Request('https://www.apple.com/cn/', meta={'cookiejar': 1}, callback=self.prepare_login)]
+
+    def prepare_login(self, resp):
+        self.api_key = resp.selector.xpath(config['API_KEY_XPATH']).extract()[0]
+        self.login_url = None
+        pass
 
     def parse(self, response):
         pass
