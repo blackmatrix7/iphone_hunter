@@ -54,14 +54,16 @@ class AppleSpider(scrapy.spiders.Spider):
             if item.get('type') == 'signIn':
                 self.login_url = item['url']
                 break
-        yield Request(self.login_url, meta={resp.meta['cookiejar']}, callback=self.login_appleid)
+        yield Request(self.login_url, callback=self.login_appleid)
 
     def login_appleid(self, resp):
-        # 获取当前域名
-        hostname = urlsplit(resp.url).hostname
-        yield FormRequest(config['APPLE_SING_IN'].format(hostname),
+        """
+        模拟登录
+        :param resp:
+        :return:
+        """
+        yield FormRequest(resp.url,
                           formdata={'login-appleId': 'timcook', 'login-password': 'sla44j1d7lY5B'},
-                          meta={'cookiejar': resp.meta['cookiejar']},
                           method='POST',
                           callback=self.test_login)
 
