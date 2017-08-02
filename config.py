@@ -5,7 +5,7 @@
 # @Site: https://github.com/blackmatrix7
 # @File: config
 # @Software: PyCharm
-
+import os
 __author__ = 'blackmatrix'
 
 
@@ -17,7 +17,10 @@ class BaseConfig:
 
     API_KEY_XPATH = '//*[@name="ac-gn-store-key"]/@content'
     APPLE_ID_XPATH = '//*[@id="sign-in-content"]'
-    APPLE_ID_PASS = '//*[@id="login-password"]'
+    APPLE_ID_PASS_XPATH = '//*[@id="login-password"]'
+
+    APPLE_ID = os.environ.get('APPLE_ID')
+    APPLE_ID_PASS = os.environ.get('APPLE_ID_PASS')
 
     def __setitem__(self, key, value):
         raise AttributeError

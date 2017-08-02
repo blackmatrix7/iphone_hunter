@@ -10,6 +10,7 @@ import re
 import json
 import scrapy
 import urllib
+import base64
 from urllib.parse import urlsplit
 from bootloader import config
 from scrapy.http import Request, FormRequest
@@ -62,13 +63,22 @@ class AppleSpider(scrapy.spiders.Spider):
         :param resp:
         :return:
         """
-        yield FormRequest(resp.url,
-                          formdata={'login-appleId': 'timcook', 'login-password': 'sla44j1d7lY5B'},
+        url = urllib.parse.urlparse(resp.url)
+        query = urllib.parse.parse_qs(resp.url)
+        yield FormRequest(config.APPLE_SING_IN.format(url[1]),
+                          formdata={'login-appleId': config.get('APPLE_ID'),
+                                    'login-password': config.get('APPLE_ID_PASS'),
+                                    '_a': 'login.sign',
+                                    '_fid': 'si',
+                                    'r': query['r'],
+                                    's': query['s'],
+                                    'c': query['s']},
                           method='POST',
                           callback=self.test_login)
 
     def test_login(self, resp):
-        print(resp)
+        body = resp.body.decode('utf-8')
+        print(body)
 
     def parse(self, response):
         pass
