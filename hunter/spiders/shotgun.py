@@ -65,14 +65,14 @@ class AppleSpider(scrapy.spiders.Spider):
         """
         url = urllib.parse.urlparse(resp.url)
         query = urllib.parse.parse_qs(resp.url)
-        yield FormRequest(config.APPLE_SING_IN.format(url[1]),
+        yield FormRequest(config.APPLE_SING_IN.format(url.hostname),
                           formdata={'login-appleId': config.get('APPLE_ID'),
                                     'login-password': config.get('APPLE_ID_PASS'),
                                     '_a': 'login.sign',
                                     '_fid': 'si',
-                                    'r': query['r'],
-                                    's': query['s'],
-                                    'c': query['s']},
+                                    'r': query['r'][0],
+                                    's': query['s'][0],
+                                    'c': query['s'][0]},
                           method='POST',
                           callback=self.test_login)
 
