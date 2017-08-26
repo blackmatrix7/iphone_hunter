@@ -77,6 +77,11 @@ class AppleSpider(scrapy.spiders.Spider):
                           callback=self.test_login)
 
     def test_login(self, resp):
+        """
+        TODO 保持登录状态
+        :param resp:
+        :return:
+        """
         body = resp.body.decode('utf-8')
         print(body)
 
