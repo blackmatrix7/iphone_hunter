@@ -79,7 +79,7 @@ class AppleSpider(scrapy.spiders.Spider):
     def login_success(self, resp):
         resp_json = json.loads(resp.text)
         url = resp_json['head']['data']['url']
-        yield Request(url, method='GET', callback=self.redirect_store)
+        yield Request(url, callback=self.redirect_store, dont_filter=True)
 
     def redirect_store(self, resp):
         pass
