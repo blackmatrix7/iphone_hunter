@@ -39,8 +39,14 @@ basecfg = BaseConfig()
 
 config = {
     'basecfg': basecfg
-
 }
+
+config_name = cmdline.config
+try:
+    import localconfig
+    current_config = localconfig.configs[config_name]
+except ImportError:
+    current_config = configs[config_name]
 
 if __name__ == '__main__':
     pass
