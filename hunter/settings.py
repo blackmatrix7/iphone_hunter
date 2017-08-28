@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'hunter.spiders'
 # USER_AGENT = 'hunter (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -34,6 +34,7 @@ ROBOTSTXT_OBEY = True
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
+COOKIES_DEBUG = True
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False

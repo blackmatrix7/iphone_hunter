@@ -12,7 +12,7 @@ import scrapy
 import urllib
 import base64
 from urllib.parse import urlsplit
-from bootloader import config
+from config import current_config
 from scrapy.http import Request, FormRequest
 
 __author__ = 'blackmatrix'
@@ -43,11 +43,11 @@ class AppleSpider(scrapy.spiders.Spider):
         self.login_url = None
 
     def start_requests(self):
-        yield Request(config['APPLE_INDEX'], meta={'cookiejar': 1}, callback=self.get_api_key)
+        yield Request(current_config['APPLE_INDEX'], meta={'cookiejar': 1}, callback=self.get_api_key)
 
     def get_api_key(self, resp):
-        self.api_key = resp.selector.xpath(config['API_KEY_XPATH']).extract()[0]
-        yield Request(config['APPLE_FLYOUT_AJAX'].format(self.api_key), callback=self.get_login_url)
+        self.api_key = resp.selector.xpath(current_config['API_KEY_XPATH']).extract()[0]
+        yield Request(current_config['APPLE_FLYOUT_AJAX'].format(self.api_key), callback=self.get_login_url)
 
     def get_login_url(self, resp):
         resp_json = json.loads(resp.body.decode('utf-8'))
@@ -65,25 +65,24 @@ class AppleSpider(scrapy.spiders.Spider):
         """
         url = urllib.parse.urlparse(resp.url)
         query = urllib.parse.parse_qs(resp.url)
-        yield FormRequest(config.APPLE_SING_IN.format(url.hostname),
-                          formdata={'login-appleId': config.get('APPLE_ID'),
-                                    'login-password': config.get('APPLE_ID_PASS'),
+        yield FormRequest(current_config.APPLE_SING_IN.format(url.hostname),
+                          formdata={'login-appleId': current_config.get('APPLE_ID'),
+                                    'login-password': current_config.get('APPLE_ID_PASS'),
                                     '_a': 'login.sign',
                                     '_fid': 'si',
                                     'r': query['r'][0],
                                     's': query['s'][0],
                                     'c': query['s'][0]},
                           method='POST',
-                          callback=self.test_login)
+                          callback=self.login_success)
 
-    def test_login(self, resp):
-        """
-        TODO 保持登录状态
-        :param resp:
-        :return:
-        """
-        body = resp.body.decode('utf-8')
-        print(body)
+    def login_success(self, resp):
+        resp_json = json.loads(resp.text)
+        url = resp_json['head']['data']['url']
+        yield Request(url, method='GET', callback=self.redirect_store)
+
+    def redirect_store(self, resp):
+        pass
 
     def parse(self, response):
         pass
