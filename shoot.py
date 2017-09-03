@@ -7,8 +7,16 @@
 # @File : cmdline.py
 # @Software: PyCharm
 from scrapy import cmdline
+from hunter.spiders import shotgun
 
 __author__ = 'blackmatrix'
+
+
+# spider = shotgun.AppleSpider()
+#
+# resp = spider.shoot()
+#
+# print(resp)
 
 cmdline.execute("scrapy crawl apple".split())
 
