@@ -10,6 +10,7 @@ from abc import ABCMeta, abstractmethod
 __author__ = 'blackmatrix'
 
 
+# TODO 短信猫接入实现
 class ISMSCenter(metaclass=ABCMeta):
 
     @abstractmethod
