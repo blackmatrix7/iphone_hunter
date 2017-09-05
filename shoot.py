@@ -7,21 +7,49 @@
 # @Software: PyCharm
 from selenium import webdriver
 from config import current_config
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+
 __author__ = 'blackmatrix'
 
 
 class QuickBuy:
 
     def __init__(self):
+        # 初始化浏览器
         options = webdriver.ChromeOptions()
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
         self.driver = webdriver.Chrome(executable_path=r"chromedriver.exe", chrome_options=options)
         self.driver.implicitly_wait(current_config['TIME_OUT'])
 
-    def select_iphone(self):
-        self.driver.get('https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/availability?channel=1')
-        # yield
+    def find_element_by_id(self, element_id):
+        element = Select(
+            WebDriverWait(
+                driver=self.driver,
+                timeout=current_config['TIME_OUT'],
+                poll_frequency=0.1
+            ).until(lambda x: x.find_element_by_id(element_id)))
+        return element
+
+    def find_element_by_xpath(self, xpath):
+        element = Select(
+            WebDriverWait(
+                driver=self.driver,
+                timeout=current_config['TIME_OUT'],
+                poll_frequency=0.1
+            ).until(lambda x: x.find_element_by_xpath(xpath)))
+        return element
+
+    def select_iphone(self, store):
+        # 打开购买页面
+        self.driver.get('http://www.cnbeta.com')
+        # 选择零售店
+        select_store = self.find_element_by_id('selectStore')
+        select_store.select_by_value(store)
+        # 选择机型
+        select_subfamily = self.find_element_by_id('selectSubfamily')
+
 
 if __name__ == '__main__':
     pass

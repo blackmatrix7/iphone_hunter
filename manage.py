@@ -19,7 +19,7 @@ def hunting():
         for watch_store_key, watch_store_value in iphone_stock.items():
             # TODO 判断库存是否有需要购买的型号
             pass
-        quick_buy.select_iphone()
+        quick_buy.select_iphone('R607')
 
 if __name__ == '__main__':
 
