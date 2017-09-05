@@ -6,10 +6,12 @@
 # @File: config
 # @Software: PyCharm
 import os
+from tookit import BaseConfig
+
 __author__ = 'blackmatrix'
 
 
-class BaseConfig:
+class CommonConfig(BaseConfig):
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'
@@ -22,20 +24,8 @@ class BaseConfig:
     APPLE_ID = os.environ.get('APPLE_ID')
     APPLE_ID_PASS = os.environ.get('APPLE_ID_PASS')
 
-    def __setitem__(self, key, value):
-        raise AttributeError
 
-    def __delitem__(self, key):
-        raise AttributeError
-
-    def __getitem__(self, item):
-        return getattr(self, item)
-
-    def get(self, item, value=None):
-        return getattr(self, item, value)
-
-
-basecfg = BaseConfig()
+basecfg = CommonConfig()
 
 configs = {
     'basecfg': basecfg
@@ -47,6 +37,3 @@ try:
     current_config = localconfig.configs[config_name]
 except ImportError:
     current_config = configs[config_name]
-
-if __name__ == '__main__':
-    pass
