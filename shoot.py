@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time : 2017/7/31 下午4:44
-# @Author : Matrix
-# @Github : https://github.com/blackmatrix7/
-# @Blog : http://www.cnblogs.com/blackmatrix/
-# @File : cmdline.py
+# @Time  : 2017/9/5 21:25
+# @Author  : BlackMatrix
+# @Site : 
+# @File : shoot.py
 # @Software: PyCharm
-from scrapy import cmdline
-from hunter.spiders import shotgun
-
+from selenium import webdriver
+from config import current_config
 __author__ = 'blackmatrix'
 
 
-# spider = shotgun.AppleSpider()
-#
-# resp = spider.shoot()
-#
-# print(resp)
+class QuickBuy:
 
-cmdline.execute("scrapy crawl apple".split())
+    def __init__(self):
+        options = webdriver.ChromeOptions()
+        prefs = {"profile.managed_default_content_settings.images": 2}
+        options.add_experimental_option("prefs", prefs)
+        self.driver = webdriver.Chrome(executable_path=r"chromedriver.exe", chrome_options=options)
+        self.driver.implicitly_wait(current_config['TIME_OUT'])
+
+    def select_iphone(self):
+        self.driver.get('https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/availability?channel=1')
+        # yield
 
 if __name__ == '__main__':
     pass
