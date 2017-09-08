@@ -18,7 +18,6 @@ __author__ = 'blackmatrix'
 class QuickBuy:
 
     def __init__(self):
-        path = current_config.PROJ_PATH
         # 初始化浏览器
         options = webdriver.ChromeOptions()
         prefs = {"profile.managed_default_content_settings.images": 2}
