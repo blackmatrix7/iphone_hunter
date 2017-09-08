@@ -5,6 +5,8 @@
 # @Site : 
 # @File : shoot.py
 # @Software: PyCharm
+import os
+import platform
 from selenium import webdriver
 from config import current_config
 from selenium.webdriver.support.ui import Select
@@ -16,11 +18,16 @@ __author__ = 'blackmatrix'
 class QuickBuy:
 
     def __init__(self):
+        path = current_config.PROJ_PATH
         # 初始化浏览器
         options = webdriver.ChromeOptions()
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
-        self.driver = webdriver.Chrome(executable_path=r"chromedriver.exe", chrome_options=options)
+        if platform.system() == 'Darwin':
+            executable_path = '{0}/{1}'.format(current_config.PROJ_PATH, 'chromedriver')
+        else:
+            executable_path = 'chromedriver.exe'
+        self.driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options)
         self.driver.implicitly_wait(current_config['TIME_OUT'])
 
     def find_element_by_id(self, element_id):
