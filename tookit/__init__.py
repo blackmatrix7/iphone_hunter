@@ -6,6 +6,7 @@
 # @File : __init__.py.py
 # @Software: PyCharm
 from .cache import Cache
+from .retry import retry
 from .config import ConfigMixin, BaseConfig
 
 __author__ = 'blackmatrix'
