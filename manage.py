@@ -14,8 +14,8 @@ quick_buy = QuickBuy()
 
 
 def hunting():
-    # while True:
-    quick_buy.select_iphone('R607')
+    while True:
+        quick_buy.select_iphone('R607')
         # apple_stores = falcon.get_apple_stores()
         # iphone_stock = falcon.search_iphone()
         # for watch_store_key, watch_store_value in iphone_stock.items():
