@@ -67,10 +67,9 @@ class AutoTest:
         return element
 
     def element_monkey_patch(self, element):
-        element.wait_find_element_by_id = partial(self.wait_find_element_by_id, parent=element)
-        element.wait_find_element_by_xpath = partial(self.wait_find_element_by_xpath, parent=element)
-        element.wait_find_elements_by_xpath = partial(self.wait_find_elements_by_xpath, parent=element)
-        element.wait_find_element_by_class_name = partial(self.wait_find_element_by_class_name, parent=element)
+        for attr in dir(self):
+            if attr.startswith('wait_'):
+                setattr(element, attr, partial(getattr(self, attr), parent=element))
 
     def elements_monkey_patch(self, elements):
         try:
@@ -85,7 +84,19 @@ class AutoTest:
 class QuickBuy(AutoTest):
 
     def select_iphone(self, store):
-        pass
+        # 打开购买页面
+        self.driver.get(current_config.TEST_URL)
+        # 登录
+        user = self.wait_find_element_by_id("username")
+        user.send_keys(current_config.TEST_USER)
+        password = self.wait_find_element_by_id("password")
+        password.send_keys(current_config.TEST_PASS)
+        login_btn = self.wait_find_element_by_class_name('logo-btn')
+        login_btn.click()
+        select_org = self.wait_find_element_by_xpath('//*[@id="layoutOrg"]')
+        orgs = select_org.wait_find_elements_by_xpath('div[2]/div/div[2]/div/button')
+        orgs[0].click()
+
 
 
 
