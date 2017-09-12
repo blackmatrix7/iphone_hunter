@@ -6,7 +6,7 @@
 # @File: config
 # @Software: PyCharm
 import os
-from tookit import BaseConfig
+from tookit import BaseConfig, get_current_config
 
 __author__ = 'blackmatrix'
 

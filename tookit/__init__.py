@@ -7,7 +7,7 @@
 # @Software: PyCharm
 from .cache import Cache
 from .retry import retry
-from .config import ConfigMixin, BaseConfig
+from .config import ConfigMixin, BaseConfig, get_current_config
 
 __author__ = 'blackmatrix'
 

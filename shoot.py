@@ -49,7 +49,7 @@ class QuickBuy:
 
     def select_iphone(self, store):
         # 打开购买页面
-        self.driver.get('http://www.cnbeta.com')
+        self.driver.get('http://www.baidu.com')
         # 选择零售店
         select_store = self.find_element_by_id('selectStore')
         select_store.select_by_value(store)
