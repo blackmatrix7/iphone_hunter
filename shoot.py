@@ -12,9 +12,9 @@ from extensions import rabbit
 from functools import partial
 from selenium import webdriver
 from config import current_config
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import ElementNotVisibleException
+from selenium.webdriver.support.ui import Select as DefaultSelect
 
 __author__ = 'blackmatrix'
 
@@ -104,6 +104,33 @@ class AutoTest:
         ).until(lambda x: x.find_elements_by_xpath(xpath))
         self.elements_monkey_patch(elements)
         return elements
+
+
+class Select(DefaultSelect):
+
+    def __init__(self, webelement):
+        super().__init__(webelement)
+
+    def select_by_index(self, index):
+        return retry(max_retries=30, step=0.5)(super().select_by_index)
+
+    def select_by_value(self, value):
+        return retry(max_retries=30, step=0.5)(super().select_by_value)
+
+    def select_by_visible_text(self, text):
+        return retry(max_retries=30, step=0.5)(super().select_by_visible_text)
+
+    def deselect_all(self):
+        return retry(max_retries=30, step=0.5)(super().deselect_all)
+
+    def deselect_by_value(self, value):
+        return retry(max_retries=30, step=0.5)(super().deselect_by_value)
+
+    def deselect_by_index(self, index):
+        return retry(max_retries=30, step=0.5)(super().deselect_by_index)
+
+    def deselect_by_visible_text(self, text):
+        return retry(max_retries=30, step=0.5)(super().deselect_by_visible_text)
 
 
 class QuickBuy(AutoTest):
