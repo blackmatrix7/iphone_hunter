@@ -9,6 +9,7 @@
 import falcon
 from shoot import QuickBuy
 from config import current_config
+from tookit.cmdline import cmdline
 
 __author__ = 'blackmatrix'
 
@@ -26,10 +27,15 @@ def hunting():
 
 
 if __name__ == '__main__':
-    # hunting()
-    import multiprocessing
-    pool = multiprocessing.Pool(processes=current_config.MULTIPROCESSING)
-    for i in range(4):
-        pool.apply_async(hunting)
-    pool.close()
-    pool.join()
+
+    if cmdline.command == 'hunter':
+        import multiprocessing
+        pool = multiprocessing.Pool(processes=current_config.MULTIPROCESSING)
+        for i in range(4):
+            pool.apply_async(hunting)
+        pool.close()
+        pool.join()
+    elif cmdline.command == 'falcon':
+        falcon.search_iphone()
+    elif cmdline.command == 'courier':
+        pass
