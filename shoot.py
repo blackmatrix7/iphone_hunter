@@ -5,10 +5,8 @@
 # @Site : 
 # @File : shoot.py
 # @Software: PyCharm
-import os
 import platform
 from tookit import retry
-from extensions import rabbit
 from functools import partial
 from selenium import webdriver
 from config import current_config
@@ -137,7 +135,8 @@ class QuickBuy(AutoTest):
 
     def select_iphone(self, store):
         # 打开购买页面
-        self.driver.get(current_config.get_buy_url(model='iPhone 8', color='深空灰色', space='256GB'))
+        self.driver.get(current_config.get_buy_url(model='iPhone 8 Plus', color='深空灰色', space='256GB'))
+        pass
         add_btn = self.wait_find_element_by_xpath('//*[@id="tabnav-dimensionCapacity"]')
         add_btn.click()
         pass
