@@ -8,14 +8,14 @@
 # @Software: PyCharm
 import falcon
 from shoot import QuickBuy
+from config import current_config
 
 __author__ = 'blackmatrix'
-
-quick_buy = QuickBuy()
 
 
 def hunting():
     # while True:
+    quick_buy = QuickBuy()
     quick_buy.select_iphone('R607')
     # apple_stores = falcon.get_apple_stores()
     # iphone_stock = falcon.search_iphone()
@@ -24,5 +24,12 @@ def hunting():
     #     pass
     # quick_buy.select_iphone('R607')
 
+
 if __name__ == '__main__':
-    hunting()
+    # hunting()
+    import multiprocessing
+    pool = multiprocessing.Pool(processes=current_config.MULTIPROCESSING)
+    for i in range(4):
+        pool.apply_async(hunting)
+    pool.close()
+    pool.join()

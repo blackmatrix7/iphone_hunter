@@ -40,7 +40,7 @@ class AutoTest:
                 setattr(element, attr, partial(getattr(self, attr), parent=element))
         # 针对dom元素的部分操作，加入重试方法
         for attr in ('click', 'submit', 'clear', 'send_keys'):
-            setattr(element, attr, retry(max_retries=10, step=0.5)(getattr(element, attr)))
+            setattr(element, attr, retry(max_retries=30, step=0.5)(getattr(element, attr)))
 
     def elements_monkey_patch(self, elements):
         try:
@@ -108,11 +108,13 @@ class AutoTest:
 
 class QuickBuy(AutoTest):
 
-    @rabbit.receive_from_rabbitmq(exchange_name='iphone_stock', queue_name='iphone_stock')
     def select_iphone(self, store):
-        models = current_config.watch_models
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model='iPhone 8', color='深空灰色', space='256GB'))
+        add_btn = self.wait_find_element_by_xpath('//*[@id="tabnav-dimensionCapacity"]')
+        add_btn.click()
+        pass
+        self.driver.close()
 
 if __name__ == '__main__':
     pass

@@ -50,7 +50,10 @@ class CommonConfig(BaseConfig):
     # 项目路径
     PROJ_PATH = os.path.abspath('')
     # 全局超时时间
-    TIME_OUT = 20
+    TIME_OUT = 60
+
+    # 进程数，不建议超过CPU核数
+    MULTIPROCESSING = 4
 
     # RabbitMQ
     RABBITMQ_HOST = '127.0.0.1'
@@ -63,8 +66,6 @@ class CommonConfig(BaseConfig):
         stores = {'shanghai': ['R607', 'R345'],
                   'beijing': ['R633', 'R797']}
         return stores
-
-    WATCH_MODELS = watch_models
 
     @staticmethod
     def get_buy_url(model, color, space):
