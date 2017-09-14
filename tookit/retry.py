@@ -4,7 +4,7 @@
 # @Author : Matrix
 # @Github : https://github.com/blackmatrix7/
 # @Blog : http://www.cnblogs.com/blackmatrix/
-# @File : retry.py
+# @File : retry.pydui
 # @Software: PyCharm
 from time import sleep
 from functools import wraps

@@ -8,6 +8,7 @@
 import os
 import platform
 from tookit import retry
+from extensions import rabbit
 from functools import partial
 from selenium import webdriver
 from config import current_config
@@ -107,29 +108,11 @@ class AutoTest:
 
 class QuickBuy(AutoTest):
 
+    @rabbit.receive_from_rabbitmq(exchange_name='iphone_stock', queue_name='iphone_stock')
     def select_iphone(self, store):
+        models = current_config.watch_models
         # 打开购买页面
-        self.driver.get(current_config.TEST_URL)
-        # 登录
-        user = self.wait_find_element_by_id("username")
-        user.send_keys(current_config.TEST_USER)
-        password = self.wait_find_element_by_id("password")
-        password.send_keys(current_config.TEST_PASS)
-        login_btn = self.wait_find_element_by_class_name('logo-btn')
-        login_btn.click()
-        select_org = self.wait_find_element_by_xpath('//*[@id="layoutOrg"]')
-        orgs = select_org.wait_find_elements_by_xpath('div[2]/div/div[2]/div/button')
-        orgs[0].click()
-        # self.wait_find_element_by_link_text('客户档案管理').click()
-        self.driver.get('http://test_crm.hongtai.org.cn/?#!/archive/info//207/list/base')
-        # add_customer_btn = self.wait_find_element_by_xpath('//*[@id="msview"]/div/div/div[1]/div[2]/a')
-        # add_customer_btn.click()
-        self.wait_find_element_by_name('archiveName').send_keys('他二舅')
-        Select(self.wait_find_element_by_name("archiveGender")).select_by_value('1')
-        Select(self.wait_find_element_by_name("archiveCustomerSource")).select_by_index(1)
-        Select(self.wait_find_element_by_name("CustomerQue")).select_by_index(1)
-        self.wait_find_element_by_xpath('//*[@id="baseInfoBox"]/div[1]/div[1]/div[8]/div[2]/a').click()
-        # self.driver.quit()
+        self.driver.get(current_config.get_buy_url(model='iPhone 8', color='深空灰色', space='256GB'))
 
 if __name__ == '__main__':
     pass
