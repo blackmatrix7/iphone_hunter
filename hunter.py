@@ -7,6 +7,7 @@
 # @Software: PyCharm
 import platform
 from functools import partial
+from extensions import rabbit
 from selenium import webdriver
 from config import current_config
 from tookit import retry as default_retry
@@ -144,6 +145,25 @@ class Shoot(AutoTest):
         add_btn.click()
         pass
         self.driver.close()
+
+
+def hunting():
+
+    # 为每个进程单独打开一个浏览器
+    shoot = Shoot()
+
+    # 从消息队列获取订购信息，如果
+    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='stock', routing_key='apple')
+    def start():
+        shoot.select_iphone('R607')
+        # apple_stores = falcon.get_apple_stores()
+        # iphone_stock = falcon.search_iphone()
+        # for watch_store_key, watch_store_value in iphone_stock.items():
+        #     # TODO 判断库存是否有需要购买的型号
+        #     pass
+        # quick_buy.select_iphone('R607')
+    start()
+
 
 if __name__ == '__main__':
     pass
