@@ -26,7 +26,10 @@ class ConfigMixin:
         raise AttributeError
 
     def __getitem__(self, item):
-        return getattr(self, item)
+        try:
+            return getattr(self, item)
+        except AttributeError as ex:
+            raise KeyError('{0} object has no key {1}'.format(self.__class__.__name__, item)) from ex
 
     def __iter__(self):
         return (k for k in dir(self) if k.upper() == k)

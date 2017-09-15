@@ -26,11 +26,9 @@ def get_apple_stores():
 @retry(max_retries=3)
 def search_iphone():
     while True:
-        now = datetime.now()
+        now = datetime.now().time()
         # 在有效的时间段内才查询库存
-        if current_config.WATCH_START.hour <= now.hour <= current_config.WATCH_END.hour \
-                and current_config.WATCH_START.minute <= now.minute <= current_config.WATCH_END.minute \
-                and current_config.WATCH_START.second <= now.second <= current_config.WATCH_END.second:
+        if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
             resp = requests.get(current_config['IPHONE_MODELS'])
             if resp.status_code == 200:
                 return resp.json()

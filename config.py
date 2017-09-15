@@ -6,20 +6,20 @@
 # @File: config
 # @Software: PyCharm
 import os
-from collections import namedtuple
+from datetime import datetime
 from tookit import BaseConfig, get_current_config
 
 __author__ = 'blackmatrix'
 
 
-time = namedtuple('time', 'hour minute second')
-
-
 class CommonConfig(BaseConfig):
 
+    # 项目路径
+    PROJ_PATH = os.path.abspath('')
+
     # Apple Store Url
-    APPLE_STORES = 'https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
-    IPHONE_MODELS = 'https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
+    APPLE_STORES_URL = 'https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
+    IPHONE_MODELS_URL = 'https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
 
     # 购买者信息
     BUYERS = [
@@ -44,8 +44,8 @@ class CommonConfig(BaseConfig):
     ]
 
     # 购买时间段
-    WATCH_START = time(7, 40, 00)
-    WATCH_END = time(20, 40, 00)
+    WATCH_START = datetime.strptime('7:40:00', '%H:%M:%S').time()
+    WATCH_END = datetime.strptime('20:40:00', '%H:%M:%S').time()
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'
@@ -54,9 +54,6 @@ class CommonConfig(BaseConfig):
     API_KEY_XPATH = '//*[@name="ac-gn-store-key"]/@content'
     APPLE_ID_XPATH = '//*[@id="sign-in-content"]'
     APPLE_ID_PASS_XPATH = '//*[@id="login-password"]'
-
-    # 项目路径
-    PROJ_PATH = os.path.abspath('')
 
     # selenium 配置
     # 全局超时时间
@@ -110,6 +107,9 @@ class CommonConfig(BaseConfig):
                                                                   color_code=color_code,
                                                                   space_code=space_code)
         return buy_url
+
+    # 统一命名
+    APPLE_STORES = apple_stores
 
 commoncfg = CommonConfig()
 
