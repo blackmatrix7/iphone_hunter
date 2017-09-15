@@ -6,6 +6,7 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : __init__.py.py
 # @Software: PyCharm
+from .huawei import SMSCenter
 
 __author__ = 'blackmatrix'
 

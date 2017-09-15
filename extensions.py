@@ -6,12 +6,14 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : extensions.py
 # @Software: PyCharm
-from tookit import RabbitMQ
 from config import current_config
+from tookit import RabbitMQ, Cache
 
 __author__ = 'blackmatrix'
 
 rabbit = RabbitMQ(config=current_config)
+
+# cache = Cache(config=current_config)
 
 if __name__ == '__main__':
     pass

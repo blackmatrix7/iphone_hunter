@@ -18,8 +18,9 @@ class CommonConfig(BaseConfig):
     PROJ_PATH = os.path.abspath('')
 
     # Apple Store Url
-    APPLE_STORES_URL = 'https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
-    IPHONE_MODELS_URL = 'https://reserve-cn.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
+    APPLE_STORES_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
+    # iPhone库存
+    IPHONE_MODELS_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
 
     # 购买者信息
     BUYERS = [
@@ -42,6 +43,22 @@ class CommonConfig(BaseConfig):
                 )
         }
     ]
+
+    # iPhone 型号
+    MODELS = {
+        'iPhone 8 银色 64GB': 'MQ6L2CH/A',
+        'iPhone 8 银色 256GB': 'MQ7G2CH/A',
+        'iPhone 8 金色 64GB': 'MQ6M2CH/A',
+        'iPhone 8 金色 256GB': 'MQ7H2CH/A',
+        'iPhone 8 深空灰色 64GB': 'MQ6K2CH/A',
+        'iPhone 8 深空灰色 256GB': 'MQ7F2CH/A',
+        'iPhone 8 Plus 银色 64GB': 'MQ8E2CH/A',
+        'iPhone 8 Plus 银色 256GB': 'MQ8H2CH/A',
+        'iPhone 8 Plus 金色 64GB': 'MQ8F2CH/A',
+        'iPhone 8 Plus 金色 256GB': 'MQ8J2CH/A',
+        'iPhone 8 Plus 深空灰色 64GB': 'MQ8D2CH/A',
+        'iPhone 8 Plus 深空灰色 256GB': 'MQ8G2CH/A',
+    }
 
     # 购买时间段
     WATCH_START = datetime.strptime('7:40:00', '%H:%M:%S').time()
@@ -78,36 +95,17 @@ class CommonConfig(BaseConfig):
                   'beijing': ['R633', 'R797']}
         return stores
 
-    @staticmethod
-    def get_buy_url(model, color, space):
-        model_code = {
-            'iPhone 8': '00',
-            'iPhone 8 Plus': '01',
-        }.get(model, '01')
+    def get_buy_url(self, model, color, space):
 
         model_name = {
             'iPhone 8': '4.7-英寸屏幕',
             'iPhone 8 Plus': '5.5-英寸屏幕',
         }.get(model, '5.5-英寸屏幕')
 
-        color_code = {
-            '银色': '10',
-            '金色': '11',
-            '深空灰色': '12'
-        }.get(color, '11')
-        space_code = {
-            '64GB': '20',
-            '256GB': '21'
-        }.get(space, '20')
-
-        buy_url = 'https://www.apple.com/cn/shop/buy-iphone/iphone-8/' \
-                  '{model_name}-{space}-{color}#' \
-                  '{model_code},{color_code},{space_code}'.format(model_name=model_name,
-                                                                  space=space,
-                                                                  color=color,
-                                                                  model_code=model_code,
-                                                                  color_code=color_code,
-                                                                  space_code=space_code)
+        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability?channel=1&' \
+                  'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/iphone-8/' \
+                  '{model_name}-{space}-{color}&rv=1'.format(model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
+                                                             model_name=model_name, color=color, space=space)
         return buy_url
 
     # 统一命名

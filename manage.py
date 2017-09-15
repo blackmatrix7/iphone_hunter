@@ -18,8 +18,8 @@ if __name__ == '__main__':
 
     if cmdline.command == 'hunter':
         import multiprocessing
-        pool = multiprocessing.Pool(processes=current_config.MULTIPROCESSING)
-        for i in range(current_config.MULTIPROCESSING):
+        pool = multiprocessing.Pool(processes=current_config['MULTIPROCESSING'])
+        for i in range(current_config['MULTIPROCESSING']):
             pool.apply_async(hunting)
         pool.close()
         pool.join()

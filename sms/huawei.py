@@ -13,7 +13,7 @@ from config import current_config
 __author__ = 'blackmatrix'
 
 
-class HWSMSCenter(ISMSCenter):
+class SMSCenter(ISMSCenter):
 
     def __init__(self):
         self.state_machine = gammu.StateMachine()

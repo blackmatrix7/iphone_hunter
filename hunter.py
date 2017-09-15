@@ -153,7 +153,7 @@ def hunting():
     shoot = Shoot()
 
     # 从消息队列获取订购信息，如果
-    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='stock', routing_key='apple')
+    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='stock', routing_key='apple')
     def start():
         shoot.select_iphone('R607')
         # apple_stores = falcon.get_apple_stores()
