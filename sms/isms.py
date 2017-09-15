@@ -10,8 +10,10 @@ from abc import ABCMeta, abstractmethod
 __author__ = 'blackmatrix'
 
 
-# TODO 短信猫接入实现
 class ISMSCenter(metaclass=ABCMeta):
+    """
+    收发短信实现，可以是短信猫、接码平台等等
+    """
 
     @abstractmethod
     def send_msg(self, targets, content):

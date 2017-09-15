@@ -60,9 +60,11 @@ class CommonConfig(BaseConfig):
     TIME_OUT = 60
     # 轮询间隔
     POLL_FREQUENCY = 0.2
-
     # 进程数，不建议超过CPU核数
     MULTIPROCESSING = 4
+
+    # GAMMU
+    FILECONFIG = os.path.abspath('.gammurc')
 
     # RabbitMQ
     RABBITMQ_HOST = '127.0.0.1'
