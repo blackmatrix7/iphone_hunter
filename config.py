@@ -6,9 +6,13 @@
 # @File: config
 # @Software: PyCharm
 import os
+from collections import namedtuple
 from tookit import BaseConfig, get_current_config
 
 __author__ = 'blackmatrix'
+
+
+time = namedtuple('time', 'hour minute second')
 
 
 class CommonConfig(BaseConfig):
@@ -38,6 +42,10 @@ class CommonConfig(BaseConfig):
                 )
         }
     ]
+
+    # 购买时间段
+    WATCH_START = time(7, 40, 00)
+    WATCH_END = time(20, 40, 00)
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'
