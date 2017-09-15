@@ -24,6 +24,6 @@ if __name__ == '__main__':
         pool.close()
         pool.join()
     elif cmdline.command == 'falcon':
-        falcon.search_iphone()
+        falcon.get_apple_stores()
     elif cmdline.command == 'courier':
         pass

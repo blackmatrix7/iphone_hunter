@@ -22,11 +22,29 @@ class CommonConfig(BaseConfig):
     # iPhone库存
     IPHONE_MODELS_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
 
+    # Apple Xpath
+    SELECT_QUANTITY = '//*[@id="quantity"]'
+    SELECT_STORE = '//*[@id="anchor-store"]'
+    BTN_TO_LOGIN = '//*[@id="pricebox"]/div[3]/div/p/button'
+    # login Page
+    # https://signin.apple.com/IDMSWebAuth/signin?path=%2FCN%2Fzh_CN%2Freserve%2FiPhone%3Fexecution%3De1s1%26p_left%3DAAAAAATyg4SpnVW62m8ActOhpiqndqu%252FkYKfxEDEMqfRcIROag%253D%253D%26_eventId%3Dnext&p_time=1505462136&rv=1&language=CN-ZH&p_left=AAAAAATyg4SpnVW62m8ActOhpiqndqu%2FkYKfxEDEMqfRcIROag%3D%3D&appIdKey=db0114b11bdc2a139e5adff448a1d7325febef288258f0dc131d6ee9afe63df3
+    APPLE_ID = '//*[@id="appleId"]'
+    APPLE_PASS = '//*[@id="pwd"]'
+    REG_CODE = '//*[@id="form"]/div/div/div[2]/div/p/strong'
+    '''
+    中国移动：(106) 5751-6068-401
+    中国电信：(106) 5902-1005-6601
+    中国联通：(106) 5502-1837-0001
+    '''
+    PHONE_NUMBER = '//*[@id="phoneNumber"]'
+    REG_CODE = '//*[@id="registrationCode"]'
+    BTN_CONTINUE = '//*[@id="form"]/div/div/div[3]/div[3]/div/div/button'
+
     # 购买者信息
     BUYERS = [
         {
             'first_name': '三', 'last_name': '张', 'idcard': 'xxxxxxxxx',
-            'city': 'shanghai', 'stores': ['R607', 'R345'],
+            'city': 'shanghai', 'stores': ['R607', 'R345'], 'quantity': 1,
             'models':
                 (
                     ['iPhone 8', '深空灰色', '64G'],
@@ -35,7 +53,7 @@ class CommonConfig(BaseConfig):
         },
         {
             'first_name': '四', 'last_name': '李', 'idcard': 'xxxxxxxxx',
-            'city': 'beijing', 'stores': ['R633', 'R797'],
+            'city': 'beijing', 'stores': ['R633', 'R797'], 'quantity': 1,
             'models':
                 (
                     ['iPhone 8 Plus', '银色', '256G'],
