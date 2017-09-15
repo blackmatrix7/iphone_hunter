@@ -25,7 +25,7 @@ class CommonConfig(BaseConfig):
     # Apple Xpath
     SELECT_QUANTITY = '//*[@id="quantity"]'
     SELECT_STORE = '//*[@id="anchor-store"]'
-    BTN_TO_LOGIN = '//*[@id="pricebox"]/div[3]/div/p/button'
+    BTN_TO_LOGIN = '//*[@id="sign-in"]'
     # login Page
     # https://signin.apple.com/IDMSWebAuth/signin?path=%2FCN%2Fzh_CN%2Freserve%2FiPhone%3Fexecution%3De1s1%26p_left%3DAAAAAATyg4SpnVW62m8ActOhpiqndqu%252FkYKfxEDEMqfRcIROag%253D%253D%26_eventId%3Dnext&p_time=1505462136&rv=1&language=CN-ZH&p_left=AAAAAATyg4SpnVW62m8ActOhpiqndqu%2FkYKfxEDEMqfRcIROag%3D%3D&appIdKey=db0114b11bdc2a139e5adff448a1d7325febef288258f0dc131d6ee9afe63df3
     APPLE_ID = '//*[@id="appleId"]'
