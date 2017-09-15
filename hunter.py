@@ -134,7 +134,7 @@ class Select(DefaultSelect):
         return retry(max_retries=30, step=0.5)(super().deselect_by_visible_text)
 
 
-class QuickBuy(AutoTest):
+class Shoot(AutoTest):
 
     def select_iphone(self, store):
         # 打开购买页面

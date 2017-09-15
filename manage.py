@@ -7,7 +7,7 @@
 # @File : cmdline.py
 # @Software: PyCharm
 import falcon
-from shoot import QuickBuy
+from hunter import Shoot
 from extensions import rabbit
 from config import current_config
 from tookit.cmdline import cmdline
@@ -18,12 +18,12 @@ __author__ = 'blackmatrix'
 def hunting():
 
     # 为每个进程单独打开一个浏览器
-    quick_buy = QuickBuy()
+    shoot = Shoot()
 
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start():
-        quick_buy.select_iphone('R607')
+        shoot.select_iphone('R607')
         # apple_stores = falcon.get_apple_stores()
         # iphone_stock = falcon.search_iphone()
         # for watch_store_key, watch_store_value in iphone_stock.items():
