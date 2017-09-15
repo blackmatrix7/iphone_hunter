@@ -6,15 +6,17 @@
 # @File : shoot.py
 # @Software: PyCharm
 import platform
-from tookit import retry
 from functools import partial
 from selenium import webdriver
 from config import current_config
+from tookit import retry as default_retry
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.support.ui import Select as DefaultSelect
 
 __author__ = 'blackmatrix'
+
+retry = partial(default_retry, max_retries=30, step=0.2)
 
 
 class AutoTest:
@@ -33,12 +35,13 @@ class AutoTest:
         self.driver.set_window_size(1024, 768)
 
     def element_monkey_patch(self, element):
+
         for attr in dir(self):
             if attr.startswith('wait_'):
                 setattr(element, attr, partial(getattr(self, attr), parent=element))
         # 针对dom元素的部分操作，加入重试方法
         for attr in ('click', 'submit', 'clear', 'send_keys'):
-            setattr(element, attr, retry(max_retries=30, step=0.5)(getattr(element, attr)))
+            setattr(element, attr, retry()(getattr(element, attr)))
 
     def elements_monkey_patch(self, elements):
         try:
@@ -53,7 +56,7 @@ class AutoTest:
         element = WebDriverWait(
             driver=parent or self.driver,
             timeout=current_config['TIME_OUT'],
-            poll_frequency=0.1
+            poll_frequency=current_config['POLL_FREQUENCY']
         ).until(lambda x: x.find_element_by_id(element_id))
         self.element_monkey_patch(element)
         return element
@@ -62,7 +65,7 @@ class AutoTest:
         element = WebDriverWait(
             driver=parent or self.driver,
             timeout=current_config['TIME_OUT'],
-            poll_frequency=0.1
+            poll_frequency=current_config['POLL_FREQUENCY']
         ).until(lambda x: x.find_element_by_xpath(xpath))
         self.element_monkey_patch(element)
         return element
@@ -71,7 +74,7 @@ class AutoTest:
         element = WebDriverWait(
             driver=parent or self.driver,
             timeout=current_config['TIME_OUT'],
-            poll_frequency=0.1
+            poll_frequency=current_config['POLL_FREQUENCY']
         ).until(lambda x: x.find_element_by_class_name(class_name))
         self.element_monkey_patch(element)
         return element
@@ -80,7 +83,7 @@ class AutoTest:
         element = WebDriverWait(
             driver=parent or self.driver,
             timeout=current_config['TIME_OUT'],
-            poll_frequency=0.1
+            poll_frequency=current_config['POLL_FREQUENCY']
         ).until(lambda x: x.find_element_by_link_text(link_text))
         self.element_monkey_patch(element)
         return element
@@ -89,7 +92,7 @@ class AutoTest:
         element = WebDriverWait(
             driver=parent or self.driver,
             timeout=current_config['TIME_OUT'],
-            poll_frequency=0.1
+            poll_frequency=current_config['POLL_FREQUENCY']
         ).until(lambda x: x.find_element_by_name(name))
         self.element_monkey_patch(element)
         return element
@@ -98,7 +101,7 @@ class AutoTest:
         elements = WebDriverWait(
             driver=parent or self.driver,
             timeout=current_config['TIME_OUT'],
-            poll_frequency=0.1
+            poll_frequency=current_config['POLL_FREQUENCY']
         ).until(lambda x: x.find_elements_by_xpath(xpath))
         self.elements_monkey_patch(elements)
         return elements
