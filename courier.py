@@ -7,12 +7,12 @@
 # @File : courier.py
 # @Software: PyCharm
 from sms import SMSCenter
-from extensions import rabbit
+from extensions import rabbit, cache
 
 __author__ = 'blackmatrix'
 
 
-# @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
+@rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
 def send_msg(message=None):
     """
     从消息队列获取需要发送的短信内容，发送成功并获取到验证码后，存储到缓存中
@@ -20,12 +20,13 @@ def send_msg(message=None):
     :return:
     """
     client = SMSCenter()
-    # client.send_msg(targets='', content='pppython')
+    client.del_msgs()
+    client.send_msg(targets=message['target'], content=message['content'])
 
     msg = client.get_msg()
     # TODO 解析短信文本，获取验证码
     # 将验证码写入缓存，20分钟超时
-    cache.set('reg_code', msg, time=1200)
+    cache.set('reg_code', msg, time=1800)
     return True
 
 
