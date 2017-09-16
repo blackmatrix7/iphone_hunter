@@ -137,6 +137,10 @@ class Select(DefaultSelect):
 
 class Shoot(AutoTest):
 
+    def __init__(self):
+        self.send_message = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms')
+        super().__init__()
+
     def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity):
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
@@ -147,18 +151,32 @@ class Shoot(AutoTest):
         select_store = Select(self.wait_find_element_by_xpath(current_config['SELECT_STORE']))
         select_store.select_by_value(store)
         # 点击继续
-        btn_continue = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
-        btn_continue.click()
+        btn_to_login = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
+        btn_to_login.click()
 
     def login_apple_id(self):
-        # if 'signin.apple.com' not in self.driver.current_url:
-        #     pass
-        # else:
-        # 切换到iframe
-        self.driver.switch_to.frame('aid-auth-widget-iFrame')
-        input_apple_id = self.wait_find_element_by_xpath(current_config['APPLE_ID_XPATH'])
-        input_apple_id.send_key(current_config['APPLE_ID'])
+        if 'signin.apple.com' not in self.driver.current_url:
+            self.send_reg_code()
+        else:
+            # 切换到iframe
+            iframe = self.wait_find_element_by_xpath('//*[@id="aid-auth-widget-iFrame"]')
+            self.driver.switch_to.frame(iframe)
+            input_apple_id = self.wait_find_element_by_xpath(current_config.APPLE_ID_XPATH)
+            input_apple_id.send_keys(current_config.APPLE_ID)
+            input_apple_pwd = self.wait_find_element_by_xpath(current_config.APPLE_PASS_XPATH)
+            input_apple_pwd.send_keys(current_config.APPLE_ID_PASS)
+            btn_login = self.wait_find_element_by_xpath(current_config.APPLE_LOGIN_XPATH)
+            btn_login.click()
+            self.send_reg_code()
 
+    def send_reg_code(self):
+        sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
+        rabbit.connect()
+        self.send_message(messages={'content': sms_code.text, 'send_to': current_config.SEND_TO})
+        rabbit.disconnect()
+        input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
+        input_phone_number.send_keys(current_config.PHONE_NUMBER)
+        input_reg_code = self.wait_find_element_by_xpath(current_config.REG_CODE_XPATH)
 
 
 def hunting():

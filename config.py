@@ -26,19 +26,24 @@ class CommonConfig(BaseConfig):
     SELECT_QUANTITY = '//*[@id="quantity"]'
     SELECT_STORE = '//*[@id="anchor-store"]'
     BTN_TO_LOGIN = '//*[@id="pricebox"]/div[3]/div/p/button'
-    # login Page
-    # https://signin.apple.com/IDMSWebAuth/signin?path=%2FCN%2Fzh_CN%2Freserve%2FiPhone%3Fexecution%3De1s1%26p_left%3DAAAAAATyg4SpnVW62m8ActOhpiqndqu%252FkYKfxEDEMqfRcIROag%253D%253D%26_eventId%3Dnext&p_time=1505462136&rv=1&language=CN-ZH&p_left=AAAAAATyg4SpnVW62m8ActOhpiqndqu%2FkYKfxEDEMqfRcIROag%3D%3D&appIdKey=db0114b11bdc2a139e5adff448a1d7325febef288258f0dc131d6ee9afe63df3
+    # 登录页面
     APPLE_ID_XPATH = '//*[@id="appleId"]'
     APPLE_PASS_XPATH = '//*[@id="pwd"]'
-    REG_CODE = '//*[@id="form"]/div/div/div[2]/div/p/strong'
+    APPLE_LOGIN_XPATH = '//*[@id="sign-in"]'
+    # 申请注册码页面
+    SMS_CODE_XPATH = '//*[@id="form"]/div/div/div[2]/div/p/strong'
+    PHONE_NUMBER_XPATH = '//*[@id="phoneNumber"]'
+    REG_CODE_XPATH = '//*[@id="registrationCode"]'
+    BTN_CONTINUE_XPATH = '//*[@id="form"]/div/div/div[3]/div[3]/div/div/button'
+
+    # 申请帐号、邮箱、手机
     '''
     中国移动：(106) 5751-6068-401
     中国电信：(106) 5902-1005-6601
     中国联通：(106) 5502-1837-0001
     '''
-    PHONE_NUMBER = '//*[@id="phoneNumber"]'
-    REG_CODE = '//*[@id="registrationCode"]'
-    BTN_CONTINUE = '//*[@id="form"]/div/div/div[3]/div[3]/div/div/button'
+    SEND_TO = '10650218370001'
+    PHONE_NUMBER = '18888888888'
 
     # 购买者信息
     BUYERS = [
@@ -87,8 +92,6 @@ class CommonConfig(BaseConfig):
     APPLE_SING_IN = 'https://{}/cn/shop/sentryx/sign_in'
 
     API_KEY_XPATH = '//*[@name="ac-gn-store-key"]/@content'
-    APPLE_ID_XPATH = '//*[@id="sign-in-content"]'
-    APPLE_ID_PASS_XPATH = '//*[@id="login-password"]'
 
     # selenium 配置
     # 全局超时时间
