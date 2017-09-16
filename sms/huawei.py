@@ -33,18 +33,14 @@ class SMSCenter(ISMSCenter):
 
     def get_msg(self):
         location = 1
-        sms_list = []
         while True:
             try:
                 sms = self.state_machine.GetSMS(Folder=1, Location=location)
                 if sms:
-                    sms_list.extend(sms)
-                    location += 1
-                sleep(0.5)
+                    return sms
             except Exception as ex:
                 print(ex)
-                break
-        return sms_list
+                sleep(0.5)
 
     def del_msgs(self):
         """
