@@ -6,10 +6,14 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : courier.py
 # @Software: PyCharm
+import json
 from sms import SMSCenter
 from extensions import rabbit, cache
 
 __author__ = 'blackmatrix'
+
+
+client = SMSCenter()
 
 
 @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
@@ -19,13 +23,12 @@ def send_msg(message=None):
     :param message:
     :return:
     """
-    client = SMSCenter()
+    message = json.loads(message)
     client.del_msgs()
     client.send_msg(targets=message['target'], content=message['content'])
 
     msg = client.get_msg()
-    # TODO 解析短信文本，获取验证码
-    # 将验证码写入缓存，20分钟超时
+    # 将验证码写入缓存，30分钟超时
     cache.set('reg_code', msg, time=1800)
     return True
 

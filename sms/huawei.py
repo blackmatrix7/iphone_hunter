@@ -7,6 +7,7 @@
 # @File : huawei.py
 # @Software: PyCharm
 import gammu
+from time import sleep
 from .isms import ISMSCenter
 from config import current_config
 
@@ -31,15 +32,15 @@ class SMSCenter(ISMSCenter):
         self.state_machine.SendSMS(message)
 
     def get_msg(self):
-        localtion = 1
         while True:
             try:
-                sms = self.state_machine.GetSMS(Folder=1, Location=localtion)
-                self.state_machine.DeleteSMS(Folder=1, Location=localtion)
-                localtion += 1
+                sms = self.state_machine.GetSMS(Folder=1, Location=1)
+                if sms is not None:
+                    break
             except Exception as ex:
                 print(ex)
-                break
+                sleep(1)
+        return sms
 
     def del_msgs(self):
         """
