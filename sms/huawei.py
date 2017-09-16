@@ -22,7 +22,13 @@ class SMSCenter(ISMSCenter):
         self.state_machine.Init()
 
     def send_msg(self, targets, content):
-        self.state_machine.GetSIMMS()
+        message = {
+            'Text': content,
+            'SMSC': {'Location': 1},
+            'Number': targets,
+            'Coding': 'Unicode_No_Compression'
+        }
+        self.state_machine.SendSMS(message)
 
     def get_msg(self):
         pass

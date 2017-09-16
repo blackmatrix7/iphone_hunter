@@ -20,7 +20,7 @@ def send_msg(message=None):
     :return:
     """
     client = SMSCenter()
-    client.send_msg(targets=message['target'], content=message['content'])
+    client.send_msg(targets='', content='pppython')
 
     msg = client.get_msg()
     # TODO 解析短信文本，获取验证码
