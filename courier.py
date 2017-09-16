@@ -7,13 +7,13 @@
 # @File : courier.py
 # @Software: PyCharm
 from sms import SMSCenter
-from extensions import rabbit, cache
+from extensions import rabbit
 
 __author__ = 'blackmatrix'
 
 
-@rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
-def send_msg(message):
+# @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
+def send_msg(message=None):
     """
     从消息队列获取需要发送的短信内容，发送成功并获取到验证码后，存储到缓存中
     :param message:
