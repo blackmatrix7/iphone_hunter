@@ -160,11 +160,27 @@ class Select(DefaultSelect):
 class Shoot(AutoTest):
 
     def __init__(self):
+        self.model = None
+        self.color = None
+        self.space = None
+        self.store = None
+        self.first_name = None
+        self.last_name = None
+        self.idcard = None
+        self.quantity = None
         self.send_message = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms')
         super().__init__()
 
     @retry(max_retries=5, delay=1)
     def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity):
+        self.model = model
+        self.color = color
+        self.space = space
+        self.store = store
+        self.first_name = first_name
+        self.last_name = last_name
+        self.idcard = idcard
+        self.quantity = quantity
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
         # 数量
@@ -242,17 +258,35 @@ class Shoot(AutoTest):
         # 继续
         btn_continue = self.wait_find_element_by_xpath(BTN_CONTINUE)
         btn_continue.click()
-        # 如果出现注册码错误，清理缓存并重试
-        if self.is_elements_by_xpath(current_config.ERR_REG_CODE):
-            err_reg_code = self.wait_find_element_by_xpath(current_config.ERR_REG_CODE)
-            if err_reg_code.is_displayed() is True:
-                cache.delete(current_config.APPLE_ID)
-                raise ErrorBuy
-        print(reg_code)
+        # # 如果出现注册码错误，清理缓存并重试
+        # if self.is_elements_by_xpath(current_config.ERR_REG_CODE):
+        #     err_reg_code = self.wait_find_element_by_xpath(current_config.ERR_REG_CODE)
+        #     if err_reg_code.is_displayed() is True:
+        #         cache.delete(current_config.APPLE_ID)
+        #         raise ErrorBuy
+        self.last_step()
 
     @retry(max_retries=5, delay=1)
     def last_step(self):
-        pass
+        select_time = Select(self.wait_find_element_by_xpath(current_config.SELECT_TIME_XPATH))
+        select_time.select_by_visible_text('下午 9:00 - 下午 9:30')
+        input_last_name = self.wait_find_element_by_xpath(current_config.LAST_NAME_XPATH)
+        input_last_name.clear()
+        input_last_name.send_keys(self.last_name)
+        input_first_name = self.wait_find_element_by_xpath(current_config.FIRST_NAME_XPATH)
+        input_first_name.clear()
+        input_first_name.send_keys(self.first_name)
+        input_email = self.wait_find_element_by_xpath(current_config.EMAIL_XPATH)
+        input_email.clear()
+        input_email.send_keys(current_config.APPLE_ID)
+        select_idcard = Select(self.wait_find_element_by_xpath(current_config.GOV_ID_TYPE_XPATH))
+        select_idcard.select_by_value('idCardChina')
+        input_idcard = self.wait_find_element_by_xpath(current_config.GOV_ID_XPATH)
+        input_idcard.clear()
+        input_idcard.send_keys(self.idcard)
+        btn_buy = self.wait_find_element_by_xpath(current_config.BTN_BUY_XPATH)
+        btn_buy.click()
+
 
 
 def hunting():
