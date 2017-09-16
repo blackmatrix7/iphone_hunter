@@ -181,7 +181,7 @@ class Shoot(AutoTest):
         # 接收到的短信
         sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
         rabbit.connect()
-        self.send_message(messages={'content': sms_code.text, 'send_to': current_config.SEND_TO})
+        self.send_message(messages={'content': sms_code.text, 'target': current_config.SEND_TO})
         rabbit.disconnect()
         input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
         input_phone_number.send_keys(current_config.PHONE_NUMBER)
