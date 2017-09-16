@@ -29,6 +29,7 @@ class SMSCenter(ISMSCenter):
             'Number': targets,
             'Coding': 'Unicode_No_Compression'
         }
+        print(message)
         self.state_machine.SendSMS(message)
 
     def get_msg(self):
