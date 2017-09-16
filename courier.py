@@ -38,7 +38,7 @@ def send_msg(message=None):
         for sms in client.get_msg()
     ]
     # 将验证码写入缓存，30分钟超时
-    cache.set(message['content'], sms_list, time=1800)
+    cache.set(message['apple_id'], sms_list, time=1800)
     # 发送短信后，再次清理所有短信
     # client.del_msgs()
     return True
