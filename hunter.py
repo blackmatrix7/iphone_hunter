@@ -258,7 +258,7 @@ class Shoot(AutoTest):
         # 继续
         btn_continue = self.wait_find_element_by_xpath(BTN_CONTINUE)
         btn_continue.click()
-        # # 如果出现注册码错误，清理缓存并重试
+        # 如果出现注册码错误，清理缓存并重试
         # if self.is_elements_by_xpath(current_config.ERR_REG_CODE):
         #     err_reg_code = self.wait_find_element_by_xpath(current_config.ERR_REG_CODE)
         #     if err_reg_code.is_displayed() is True:
