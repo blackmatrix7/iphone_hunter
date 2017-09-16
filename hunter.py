@@ -6,6 +6,7 @@
 # @File : shoot.py
 # @Software: PyCharm
 import platform
+from time import sleep
 from functools import partial
 from selenium import webdriver
 from config import current_config
@@ -183,18 +184,22 @@ class Shoot(AutoTest):
         rabbit.connect()
         self.send_message(messages={'content': sms_code.text, 'target': current_config.SEND_TO})
         rabbit.disconnect()
+        # 填写手机号码
         input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
         input_phone_number.send_keys(current_config.PHONE_NUMBER)
-        # 遍历获取缓存验证码
+        # 遍历获取缓存注册码
         while True:
             sms = cache.get('reg_code')
             if sms is not None:
                 break
+        # TODO 解析注册码
         reg_code = sms
-
+        # 填写注册码
         input_reg_code = self.wait_find_element_by_xpath(current_config.REG_CODE_XPATH)
         input_reg_code.send_keys(reg_code)
-
+        # 继续
+        btn_continue = self.wait_find_element_by_xpath(current_config.BTN_CONTINUE_XPATH)
+        btn_continue.click()
         print(reg_code)
 
 
