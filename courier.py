@@ -20,13 +20,14 @@ def send_msg(message=None):
     :return:
     """
     client = SMSCenter()
-    client.send_msg(targets='', content='pppython')
+    # client.send_msg(targets='', content='pppython')
 
     msg = client.get_msg()
     # TODO 解析短信文本，获取验证码
     # 将验证码写入缓存，20分钟超时
     # cache.set('reg_code', msg, time=1200)
     return True
+
 
 if __name__ == '__main__':
     pass

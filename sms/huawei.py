@@ -31,7 +31,22 @@ class SMSCenter(ISMSCenter):
         self.state_machine.SendSMS(message)
 
     def get_msg(self):
-        pass
+        localtion = 1
+        while True:
+            try:
+                sms = self.state_machine.GetSMS(Folder=1, Location=localtion)
+                self.state_machine.DeleteSMS(Folder=1, Location=localtion)
+                localtion += 1
+            except Exception as ex:
+                print(ex)
+                break
+
+
+        a = self.state_machine.GetSMS(Folder=1, Location=1)
+        self.state_machine.SMS
+        self.state_machine.DeleteSMS(Folder=1, Location=1)
+        b = self.state_machine.GetSMSFolders()
+        print(a)
 
 
 if __name__ == '__main__':
