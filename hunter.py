@@ -114,37 +114,51 @@ class Select(DefaultSelect):
         super().__init__(webelement)
 
     def select_by_index(self, index):
-        return retry(max_retries=30, step=0.5)(super().select_by_index)
+        return retry()(super(Select, self).select_by_index)(index)
 
     def select_by_value(self, value):
-        return retry(max_retries=30, step=0.5)(super().select_by_value)
+        return retry()(super(Select, self).select_by_value)(value)
 
     def select_by_visible_text(self, text):
-        return retry(max_retries=30, step=0.5)(super().select_by_visible_text)
+        return retry()(super(Select, self).select_by_visible_text)(text)
 
     def deselect_all(self):
-        return retry(max_retries=30, step=0.5)(super().deselect_all)
+        return retry()(super().deselect_all)()
 
     def deselect_by_value(self, value):
-        return retry(max_retries=30, step=0.5)(super().deselect_by_value)
+        return retry()(super().deselect_by_value)(value)
 
     def deselect_by_index(self, index):
-        return retry(max_retries=30, step=0.5)(super().deselect_by_index)
+        return retry()(super().deselect_by_index)(index)
 
     def deselect_by_visible_text(self, text):
-        return retry(max_retries=30, step=0.5)(super().deselect_by_visible_text)
+        return retry()(super().deselect_by_visible_text)(text)
 
 
 class Shoot(AutoTest):
 
-    def select_iphone(self, store):
+    def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity):
         # 打开购买页面
-        self.driver.get(current_config.get_buy_url(model='iPhone 8 Plus', color='深空灰色', space='256GB'))
-        pass
-        add_btn = self.wait_find_element_by_xpath('//*[@id="tabnav-dimensionCapacity"]')
-        add_btn.click()
-        pass
-        self.driver.close()
+        self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
+        # 选择数量
+        select_quantity = Select(self.wait_find_element_by_xpath(current_config.SELECT_QUANTITY))
+        select_quantity.select_by_value(str(quantity))
+        # 选择零售店
+        select_store = Select(self.wait_find_element_by_xpath(current_config['SELECT_STORE']))
+        select_store.select_by_value(store)
+        # 点击继续
+        btn_continue = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
+        btn_continue.click()
+
+    def login_apple_id(self):
+        # if 'signin.apple.com' not in self.driver.current_url:
+        #     pass
+        # else:
+        # 切换到iframe
+        self.driver.switch_to.frame('aid-auth-widget-iFrame')
+        input_apple_id = self.wait_find_element_by_xpath(current_config['APPLE_ID_XPATH'])
+        input_apple_id.send_key(current_config['APPLE_ID'])
+
 
 
 def hunting():
@@ -155,7 +169,9 @@ def hunting():
     # 从消息队列获取订购信息，如果
     # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='stock', routing_key='apple')
     def start():
-        shoot.select_iphone('R607')
+        shoot.select_iphone(model='iPhone 8', color='深空灰色', space='64GB', store='R581',
+                            first_name='三', last_name='张', idcard='123456789', quantity=2)
+        shoot.login_apple_id()
         # apple_stores = falcon.get_apple_stores()
         # iphone_stock = falcon.search_iphone()
         # for watch_store_key, watch_store_value in iphone_stock.items():
