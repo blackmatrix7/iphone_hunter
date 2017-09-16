@@ -35,6 +35,9 @@ class CommonConfig(BaseConfig):
     PHONE_NUMBER_XPATH = '//*[@id="phoneNumber"]'
     REG_CODE_XPATH = '//*[@id="registrationCode"]'
     BTN_CONTINUE_XPATH = '//*[@id="form"]/div/div/div[3]/div[3]/div/div/button'
+    # 验证你的注册码。
+    VALIDATE_REG_CODE = '//*[@id="main"]/section[1]/div/div/div/h1'
+
 
     # 申请帐号、邮箱、手机
     '''

@@ -199,8 +199,8 @@ class Shoot(AutoTest):
         # 排序
         sms_list.sort(key=itemgetter('datetime'))
         for sms in sms_list:
-            # TODO 解析注册码
-            reg_code = sms
+            if 'apple' in sms:
+                reg_code = sms
         # 填写注册码
         input_reg_code = self.wait_find_element_by_xpath(current_config.REG_CODE_XPATH)
         input_reg_code.send_keys(reg_code)
