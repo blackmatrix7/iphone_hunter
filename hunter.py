@@ -9,6 +9,7 @@ import platform
 from time import sleep
 from functools import partial
 from selenium import webdriver
+from operator import itemgetter
 from config import current_config
 from extensions import rabbit, cache
 from tookit import retry as default_retry
@@ -179,8 +180,11 @@ class Shoot(AutoTest):
         申请注册码
         :return:
         """
-        # 接收到的短信
+        # 注册码
+        reg_code = None
+        # 验证码
         sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
+        # 发送短信
         rabbit.connect()
         self.send_message(messages={'content': sms_code.text, 'target': current_config.SEND_TO})
         rabbit.disconnect()
@@ -189,11 +193,14 @@ class Shoot(AutoTest):
         input_phone_number.send_keys(current_config.PHONE_NUMBER)
         # 遍历获取缓存注册码
         while True:
-            sms = cache.get('reg_code')
-            if sms is not None:
+            sms_list = cache.get('reg_code')
+            if sms_list:
                 break
-        # TODO 解析注册码
-        reg_code = sms
+        # 排序
+        sms_list.sort(key=itemgetter('datetime'))
+        for sms in sms_list:
+            if 'apple' in sms:
+                reg_code = sms
         # 填写注册码
         input_reg_code = self.wait_find_element_by_xpath(current_config.REG_CODE_XPATH)
         input_reg_code.send_keys(reg_code)
