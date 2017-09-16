@@ -62,6 +62,7 @@ def retry(max_retries: int =5, delay: (int, float) =0, step: (int, float) =0,
                     else:
                         return result
                 except exceptions as ex:
+                    print(ex)
                     # 回调函数返回True时，表示告知装饰器异常已经处理，终止重试
                     if callable(callback) and callback(ex) is True:
                         return

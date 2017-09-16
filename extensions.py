@@ -13,7 +13,7 @@ __author__ = 'blackmatrix'
 
 rabbit = RabbitMQ(config=current_config)
 
-# cache = Cache(config=current_config)
+cache = Cache(config=current_config)
 
 if __name__ == '__main__':
     pass

@@ -110,6 +110,9 @@ class CommonConfig(BaseConfig):
     RABBITMQ_USER = 'user'
     RABBITMQ_PASS = '123456'
 
+    # Cache
+    CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
+
     @property
     def apple_stores(self):
         stores = {'shanghai': ['R607', 'R345'],
