@@ -25,6 +25,7 @@ class CommonConfig(BaseConfig):
     # Apple Xpath
     SELECT_QUANTITY = '//*[@id="quantity"]'
     SELECT_STORE = '//*[@id="anchor-store"]'
+    # 跳转到登录页面
     BTN_TO_LOGIN = '//*[@id="pricebox"]/div[3]/div/p/button'
     # 登录页面
     APPLE_ID_XPATH = '//*[@id="appleId"]'
@@ -34,9 +35,29 @@ class CommonConfig(BaseConfig):
     SMS_CODE_XPATH = '//*[@id="form"]/div/div/div[2]/div/p/strong'
     PHONE_NUMBER_XPATH = '//*[@id="phoneNumber"]'
     REG_CODE_XPATH = '//*[@id="registrationCode"]'
-    BTN_CONTINUE_XPATH = '//*[@id="form"]/div/div/div[3]/div[3]/div/div/button'
+    # 两个继续按钮，一个是需要发送短信的
+    BTN_NEED_SEND_SMS_XPATH = '//*[@id="form"]/div/div/div[3]/div[3]/div/div/button'
+    # 一个是不需要发送短信，直接输入注册码的
+    BTN_NEED_REG_CODE_XPATH = '//*[@id="form"]/div/div/div[2]/div[2]/div/div/button'
     # 验证你的注册码。
     VALIDATE_REG_CODE = '//*[@id="main"]/section[1]/div/div/div/h1'
+    # 错误的注册码
+    ERR_REG_CODE = '//*[@id="registrationCode-error"]/div[2]'
+
+    # 选择时间
+    SELECT_TIME_XPATH = '//*[@id="timeslot"]'
+    # 姓
+    LAST_NAME_XPATH = '//*[@id="lastName"]'
+    # 名
+    FIRST_NAME_XPATH = '//*[@id="firstName"]'
+    # 邮箱
+    EMAIL_XPATH = '//*[@id="email"]'
+    # 证件类型，只支持身份证照， idCardChina
+    GOV_ID_TYPE_XPATH = '//*[@id="governmentIDType"]'
+    # 身份证号
+    GOV_ID_XPATH = '//*[@id="governmentID"]'
+    # 预约
+    BTN_BUY_XPATH = '//*[@id="pricebox"]/div[3]/div/p/button'
 
 
     # 申请帐号、邮箱、手机

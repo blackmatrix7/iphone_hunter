@@ -7,19 +7,23 @@
 # @Software: PyCharm
 import platform
 from time import sleep
+from tookit import retry
 from functools import partial
 from selenium import webdriver
 from operator import itemgetter
 from config import current_config
 from extensions import rabbit, cache
-from tookit import retry as default_retry
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.support.ui import Select as DefaultSelect
 
 __author__ = 'blackmatrix'
 
-retry = partial(default_retry, max_retries=30, step=0.2)
+custom_retry = partial(retry, max_retries=30, step=0.2)
+
+
+class ErrorBuy(Exception):
+    pass
 
 
 class AutoTest:
@@ -44,7 +48,7 @@ class AutoTest:
                 setattr(element, attr, partial(getattr(self, attr), parent=element))
         # 针对dom元素的部分操作，加入重试方法
         for attr in ('click', 'submit', 'clear', 'send_keys'):
-            setattr(element, attr, retry()(getattr(element, attr)))
+            setattr(element, attr, custom_retry()(getattr(element, attr)))
 
     def elements_monkey_patch(self, elements):
         try:
@@ -109,6 +113,22 @@ class AutoTest:
         self.elements_monkey_patch(elements)
         return elements
 
+    def is_elements_by_xpath(self, xpath):
+        """
+        判断元素是否存在，有个2秒的延迟。
+        :param xpath:
+        :return:
+        """
+        try:
+            WebDriverWait(
+                driver=self.driver,
+                timeout=1,
+                poll_frequency=current_config['POLL_FREQUENCY']
+            ).until(lambda x: x.find_elements_by_xpath(xpath))
+            return True
+        except ElementNotVisibleException:
+            return False
+
 
 class Select(DefaultSelect):
 
@@ -116,25 +136,25 @@ class Select(DefaultSelect):
         super().__init__(webelement)
 
     def select_by_index(self, index):
-        return retry()(super(Select, self).select_by_index)(index)
+        return custom_retry()(super(Select, self).select_by_index)(index)
 
     def select_by_value(self, value):
-        return retry()(super(Select, self).select_by_value)(value)
+        return custom_retry()(super(Select, self).select_by_value)(value)
 
     def select_by_visible_text(self, text):
-        return retry()(super(Select, self).select_by_visible_text)(text)
+        return custom_retry()(super(Select, self).select_by_visible_text)(text)
 
     def deselect_all(self):
-        return retry()(super().deselect_all)()
+        return custom_retry()(super().deselect_all)()
 
     def deselect_by_value(self, value):
-        return retry()(super().deselect_by_value)(value)
+        return custom_retry()(super().deselect_by_value)(value)
 
     def deselect_by_index(self, index):
-        return retry()(super().deselect_by_index)(index)
+        return custom_retry()(super().deselect_by_index)(index)
 
     def deselect_by_visible_text(self, text):
-        return retry()(super().deselect_by_visible_text)(text)
+        return custom_retry()(super().deselect_by_visible_text)(text)
 
 
 class Shoot(AutoTest):
@@ -143,6 +163,7 @@ class Shoot(AutoTest):
         self.send_message = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms')
         super().__init__()
 
+    @retry(max_retries=5, delay=1)
     def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity):
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
@@ -156,6 +177,7 @@ class Shoot(AutoTest):
         btn_to_login = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
         btn_to_login.click()
 
+    @retry(max_retries=5, delay=1)
     def login_apple_id(self):
         # 如果无需登录则直接购买
         if 'signin.apple.com' not in self.driver.current_url:
@@ -175,39 +197,62 @@ class Shoot(AutoTest):
             btn_login.click()
             self.send_reg_code()
 
+    @retry(max_retries=5, delay=1)
     def send_reg_code(self):
         """
         申请注册码
         :return:
         """
         # 注册码
-        reg_code = None
-        # 验证码
-        sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
-        # 发送短信
-        rabbit.connect()
-        self.send_message(messages={'content': sms_code.text, 'target': current_config.SEND_TO})
-        rabbit.disconnect()
-        # 填写手机号码
-        input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
-        input_phone_number.send_keys(current_config.PHONE_NUMBER)
+        reg_code = '123456'
+        # 手机号
+        phone_number = '18858888888'
+        validate_reg_code = self.wait_find_element_by_xpath(current_config.VALIDATE_REG_CODE)
+        BTN_CONTINUE = current_config.BTN_NEED_REG_CODE_XPATH
+        # 需要申请注册码的情况
+        if validate_reg_code.text == '申请并验证你的注册码。':
+            BTN_CONTINUE = current_config.BTN_NEED_SEND_SMS_XPATH
+            # 验证码
+            sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
+            # 发送短信
+            rabbit.connect()
+            self.send_message(messages={'content': sms_code.text,
+                                        'target': current_config.SEND_TO,
+                                        'apple_id': current_config.APPLE_ID})
+            rabbit.disconnect()
         # 遍历获取缓存注册码
         while True:
-            sms_list = cache.get('reg_code')
+            sms_list = cache.get(current_config.APPLE_ID)
             if sms_list:
                 break
         # 排序
         sms_list.sort(key=itemgetter('datetime'))
         for sms in sms_list:
-            if 'apple' in sms:
-                reg_code = sms
+            if '注册码' in sms['text']:
+                phone_number = sms['send_from']
+                reg_code = sms['text'][6:15]
+        # 填写手机号码
+        input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
+        input_phone_number.clear()
+        input_phone_number.send_keys(phone_number)
         # 填写注册码
         input_reg_code = self.wait_find_element_by_xpath(current_config.REG_CODE_XPATH)
+        input_reg_code.clear()
         input_reg_code.send_keys(reg_code)
         # 继续
-        btn_continue = self.wait_find_element_by_xpath(current_config.BTN_CONTINUE_XPATH)
+        btn_continue = self.wait_find_element_by_xpath(BTN_CONTINUE)
         btn_continue.click()
+        # 如果出现注册码错误，清理缓存并重试
+        if self.is_elements_by_xpath(current_config.ERR_REG_CODE):
+            err_reg_code = self.wait_find_element_by_xpath(current_config.ERR_REG_CODE)
+            if err_reg_code.is_displayed() is True:
+                cache.delete(current_config.APPLE_ID)
+                raise ErrorBuy
         print(reg_code)
+
+    @retry(max_retries=5, delay=1)
+    def last_step(self):
+        pass
 
 
 def hunting():
