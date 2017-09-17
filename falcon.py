@@ -5,6 +5,7 @@
 # @Site : 
 # @File : falcon.py
 # @Software: PyCharm
+import json
 import requests
 from time import sleep
 from tookit import retry
@@ -66,25 +67,29 @@ def get_apple_stores(select_city=None):
 
 @retry(max_retries=3)
 def search_iphone():
-    with rabbit as mq:
-        while True:
-            # 购买者的信息，每次循环实时获取最新的购买者信息
-            buyers_info = get_buyers_info()
-            now = datetime.now().time()
-            # 在有效的时间段内才查询库存
-            if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
-                resp = requests.get(current_config['IPHONE_MODELS_URL'])
-                availability = resp.json()
-                # 遍历意向购买的商店和意向购买的商品
-                for store, models in buyers_info.items():
-                    # 遍历意向购买的型号和对应的购买人
-                    for model_number, buyers in models.items():
-                        # 获取商品型号在店内的库存
-                        stock = availability['stores'][store][model_number]
-                        if stock['availability']['unlocked'] is True:
-                            buy_info = buyers_info[store][model_number][0]
-                            mq.send_message(exchange_name='iphone', queue_name='stock', messages=buy_info)
-            sleep(5)
+    rabbit.connect()
+    while True:
+        sleep(5)
+        # 购买者的信息，每次循环实时获取最新的购买者信息
+        buyers_info = get_buyers_info()
+        now = datetime.now().time()
+        # 在有效的时间段内才查询库存
+        if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
+            resp = requests.get(current_config['IPHONE_MODELS_URL'])
+            availability = resp.json()
+            # 遍历意向购买的商店和意向购买的商品
+            for store, models in buyers_info.items():
+                # 遍历意向购买的型号和对应的购买人
+                for model_number, buyers in models.items():
+                    # 获取商品型号在店内的库存
+                    stock = availability['stores'][store][model_number]
+                    if stock['availability']['unlocked'] is True:
+                        buy_info = buyers_info[store][model_number][0]
+                        hash_key = hash(json.dumps(buy_info))
+                        if cache.get(hash_key) is None:
+                            # 已经发送过的购买者信息，5分钟内不再发送
+                            cache.set(key=hash_key, val=True, time=300)
+                            rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buy_info)
 
 if __name__ == '__main__':
     pass

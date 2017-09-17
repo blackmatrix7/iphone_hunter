@@ -294,7 +294,7 @@ def hunting():
     shoot = Shoot()
 
     # 从消息队列获取订购信息，如果
-    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='stock', routing_key='apple')
+    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start():
         shoot.select_iphone(model='iPhone 8', color='深空灰色', space='64GB', store='R581',
                             first_name='三', last_name='张', idcard='123456789', quantity=2)
