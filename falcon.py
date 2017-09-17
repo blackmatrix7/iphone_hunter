@@ -16,6 +16,7 @@ from extensions import cache, rabbit
 __author__ = 'blackmatrix'
 
 
+@cache.cached('buyers')
 def get_buyers_info():
     """
     获取并整理买家信息，按零售店划分
@@ -89,6 +90,7 @@ def search_iphone():
                         if cache.get(hash_key) is None:
                             # 已经发送过的购买者信息，5分钟内不再发送
                             cache.set(key=hash_key, val=True, time=300)
+                            buy_info['store'] = store
                             rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buy_info)
 
 if __name__ == '__main__':

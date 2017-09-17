@@ -6,7 +6,6 @@
 # @File : shoot.py
 # @Software: PyCharm
 import platform
-from time import sleep
 from tookit import retry
 from functools import partial
 from selenium import webdriver
