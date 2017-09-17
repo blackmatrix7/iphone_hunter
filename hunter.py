@@ -5,6 +5,7 @@
 # @Site : 
 # @File : shoot.py
 # @Software: PyCharm
+import json
 import platform
 from tookit import retry
 from functools import partial
@@ -191,6 +192,7 @@ class Shoot(AutoTest):
         # 继续
         btn_to_login = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
         btn_to_login.click()
+        self.login_apple_id()
 
     @retry(max_retries=5, delay=1)
     def login_apple_id(self):
@@ -293,17 +295,13 @@ def hunting():
     shoot = Shoot()
 
     # 从消息队列获取订购信息，如果
-    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
-    def start():
-        shoot.select_iphone(model='iPhone 8', color='深空灰色', space='64GB', store='R581',
-                            first_name='三', last_name='张', idcard='123456789', quantity=2)
-        shoot.login_apple_id()
-        # apple_stores = falcon.get_apple_stores()
-        # iphone_stock = falcon.search_iphone()
-        # for watch_store_key, watch_store_value in iphone_stock.items():
-        #     # TODO 判断库存是否有需要购买的型号
-        #     pass
-        # quick_buy.select_iphone('R607')
+    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
+    def start(message=None):
+        message = json.loads(message.decode())
+        shoot.select_iphone(model=message['model'], color=message['color'],
+                            space=message['space'], store=message['store'],
+                            first_name=message['first_name'], last_name=message['last_name'],
+                            idcard=message['idcard'], quantity=message['quantity'])
     start()
 
 
