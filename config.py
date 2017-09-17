@@ -72,7 +72,7 @@ class CommonConfig(BaseConfig):
     BUYERS = [
         {
             'first_name': '三', 'last_name': '张', 'idcard': 'xxxxxxxxx',
-            'city': '上海', 'stores': ['R607', 'R345'], 'quantity': 1,
+            'city': '上海', 'stores': None, 'quantity': 1,
             'models':
                 [
                     ['iPhone 8', '深空灰色', '64GB'],
@@ -81,7 +81,7 @@ class CommonConfig(BaseConfig):
         },
         {
             'first_name': '四', 'last_name': '李', 'idcard': 'xxxxxxxxx',
-            'city': '上海', 'stores': ['R633', 'R797'], 'quantity': 1,
+            'city': '上海', 'stores': None, 'quantity': 1,
             'models':
                 [
                     ['iPhone 8 Plus', '银色', '256GB'],

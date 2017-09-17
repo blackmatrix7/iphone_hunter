@@ -288,7 +288,6 @@ class Shoot(AutoTest):
         btn_buy.click()
 
 
-
 def hunting():
 
     # 为每个进程单独打开一个浏览器
