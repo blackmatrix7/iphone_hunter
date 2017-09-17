@@ -59,7 +59,6 @@ class CommonConfig(BaseConfig):
     # 预约
     BTN_BUY_XPATH = '//*[@id="pricebox"]/div[3]/div/p/button'
 
-
     # 申请帐号、邮箱、手机
     '''
     中国移动：(106) 5751-6068-401
@@ -73,21 +72,21 @@ class CommonConfig(BaseConfig):
     BUYERS = [
         {
             'first_name': '三', 'last_name': '张', 'idcard': 'xxxxxxxxx',
-            'city': 'shanghai', 'stores': ['R607', 'R345'], 'quantity': 1,
+            'city': '上海', 'stores': ['R607', 'R345'], 'quantity': 1,
             'models':
-                (
-                    ['iPhone 8', '深空灰色', '64G'],
-                    ['iPhone 8', '金色', '64G']
-                )
+                [
+                    ['iPhone 8', '深空灰色', '64GB'],
+                    ['iPhone 8', '金色', '64GB']
+                ]
         },
         {
             'first_name': '四', 'last_name': '李', 'idcard': 'xxxxxxxxx',
-            'city': 'beijing', 'stores': ['R633', 'R797'], 'quantity': 1,
+            'city': '上海', 'stores': ['R633', 'R797'], 'quantity': 1,
             'models':
-                (
-                    ['iPhone 8 Plus', '银色', '256G'],
-                    ['iPhone 8', '深空灰色', '64G']
-                )
+                [
+                    ['iPhone 8 Plus', '银色', '256GB'],
+                    ['iPhone 8', '深空灰色', '64GB']
+                ]
         }
     ]
 
@@ -137,12 +136,6 @@ class CommonConfig(BaseConfig):
     # Cache
     CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
 
-    @property
-    def apple_stores(self):
-        stores = {'shanghai': ['R607', 'R345'],
-                  'beijing': ['R633', 'R797']}
-        return stores
-
     def get_buy_url(self, model, color, space):
 
         model_name = {
@@ -156,8 +149,6 @@ class CommonConfig(BaseConfig):
                                                              model_name=model_name, color=color, space=space)
         return buy_url
 
-    # 统一命名
-    APPLE_STORES = apple_stores
 
 commoncfg = CommonConfig()
 
