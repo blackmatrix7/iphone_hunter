@@ -7,7 +7,7 @@
 # @File : extensions.py
 # @Software: PyCharm
 from config import current_config
-from tookit import RabbitMQ, Cache
+from toolkit import RabbitMQ, Cache
 
 __author__ = 'blackmatrix'
 

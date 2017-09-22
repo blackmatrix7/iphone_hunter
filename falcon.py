@@ -8,7 +8,7 @@
 import json
 import requests
 from time import sleep
-from tookit import retry
+from toolkit import retry
 from datetime import datetime
 from config import current_config
 from extensions import cache, rabbit
