@@ -107,7 +107,7 @@ class CommonConfig(BaseConfig):
     }
 
     # 购买时间段
-    WATCH_START = datetime.strptime('7:40:00', '%H:%M:%S').time()
+    WATCH_START = datetime.strptime('7:55:00', '%H:%M:%S').time()
     WATCH_END = datetime.strptime('20:40:00', '%H:%M:%S').time()
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
