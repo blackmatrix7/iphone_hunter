@@ -3,7 +3,7 @@
 # @Time: 2017/7/9 下午1:28
 # @Author: BlackMatrix
 # @Site: https://github.com/blackmatrix7
-# @File: cache
+# @File: cache.py
 # @Software: PyCharm
 import pickle
 import hashlib
@@ -26,7 +26,7 @@ class Cache(Client):
     基于Python3-Memcached客户端轻度封装的缓存操作类
     """
 
-    def __init__(self, *, config=None, servers: list = None, key_prefix: str='',
+    def __init__(self, *, decorator_enable=True, config=None, servers: list = None, key_prefix: str= '',
                  debug=False, pickle_protocol=0, pickler=pickle.Pickler, unpickler=pickle.Unpickler,
                  pload=None, pid=None, server_max_key_length=SERVER_MAX_KEY_LENGTH,
                  server_max_value_length=SERVER_MAX_VALUE_LENGTH, dead_retry=_DEAD_RETRY,
@@ -34,24 +34,25 @@ class Cache(Client):
                  check_keys=True):
         """
         初始化Memcached客户端
+        :param decorator_enable:  是否启用缓存，如果为False，缓存装饰器不会生效，主要解决在某些开发环境下不希望应用缓存的问题。
         :param config:  配置文件，dict，详细的配置文件项目说明见后。
                                 当配置文件项目与__init__参数重复时，以配置文件项目为准。
         :param servers:  Memcached 服务器列表
         :param key_prefix:  key 前缀，会在每个key中加入对应的字符串前缀。
-        :param debug: 
-        :param pickle_protocol: 
-        :param pickler: 
-        :param unpickler: 
-        :param pload: 
-        :param pid: 
-        :param server_max_key_length: 
-        :param server_max_value_length: 
-        :param dead_retry: 
-        :param socket_timeout: 
-        :param cache_cas: 
-        :param flush_on_reconnect: 
-        :param check_keys: 
-        
+        :param debug:
+        :param pickle_protocol:
+        :param pickler:
+        :param unpickler:
+        :param pload:
+        :param pid:
+        :param server_max_key_length:
+        :param server_max_value_length:
+        :param dead_retry:
+        :param socket_timeout:
+        :param cache_cas:
+        :param flush_on_reconnect:
+        :param check_keys:
+
         目前在配置文件中支持如下参数：
         DEBUG： 是否启动debug模式
         CACHE_KEY_PREFIX： key 前缀，会在每个key中加入对应的字符串前缀。
@@ -60,11 +61,13 @@ class Cache(Client):
             key会自动加入这个前缀。
             set(key=''hello, value='value')，实际上在memcached中的key是testhello。
         CACHE_MEMCACHED_SERVERS： memcached服务器列表
+        CACHE_DECORATOR_ENABLE: cached缓存装饰器是否生效，此配置主要解决开发环境下不希望缓存生效的情况。
         """
         config = config or {}
         self.debug = config.get('DEBUG', debug)
         self.key_prefix = config.get('CACHE_KEY_PREFIX', key_prefix)
         self.servers = config.get('CACHE_MEMCACHED_SERVERS', servers)
+        self.caching = config.get('CACHE_DECORATOR_ENABLE', decorator_enable)
 
         super().__init__(servers=self.servers, debug=self.debug, pickleProtocol=pickle_protocol,
                          pickler=pickler, unpickler=unpickler, pload=pload, pid=pid,
@@ -172,7 +175,7 @@ class Cache(Client):
                 func_cache = self.get(key) or OrderedDict()
                 # 生成函数参数签名
                 args_sig = self._create_args_sig(func, *args, **kwargs)
-                if args_sig is None:
+                if self.caching is False or args_sig is None:
                     result = func(*args, **kwargs)
                 else:
                     # 将签名作为key，读取缓存中的函数执行结果

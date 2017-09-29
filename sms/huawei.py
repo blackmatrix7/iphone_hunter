@@ -8,13 +8,12 @@
 # @Software: PyCharm
 import gammu
 from time import sleep
-from .isms import ISMSCenter
 from config import current_config
 
 __author__ = 'blackmatrix'
 
 
-class SMSCenter(ISMSCenter):
+class SMSCenter:
 
     def __init__(self):
         self.state_machine = gammu.StateMachine()
