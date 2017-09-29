@@ -1,3 +1,3 @@
 [gammu]
-device = COM8
+device = COM13
 connection = at19200
