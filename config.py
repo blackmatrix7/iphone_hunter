@@ -104,6 +104,10 @@ class CommonConfig(BaseConfig):
         'iPhone 8 Plus 金色 256GB': 'MQ8J2CH/A',
         'iPhone 8 Plus 深空灰色 64GB': 'MQ8D2CH/A',
         'iPhone 8 Plus 深空灰色 256GB': 'MQ8G2CH/A',
+        'iPhone X 深空灰色 64GB': 'MQA52CH/A',
+        'iPhone X 深空灰色 256GB': 'MQA82CH/A',
+        'iPhone X 银色 64GB': 'MQA62CH/A',
+        'iPhone X 银色 256GB': 'MQA92CH/A',
     }
 
     # 购买时间段
