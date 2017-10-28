@@ -126,7 +126,7 @@ class CommonConfig(BaseConfig):
     # 轮询间隔
     POLL_FREQUENCY = 0.2
     # 进程数，不建议超过CPU核数
-    MULTIPROCESSING = 1
+    MULTIPROCESSING = 2
 
     # GAMMU
     FILECONFIG = os.path.abspath('.gammurc')
