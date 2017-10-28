@@ -148,9 +148,10 @@ class CommonConfig(BaseConfig):
             'iPhone X': '5.8-英寸显示屏',
         }.get(model, '5.8-英寸显示屏')
 
-        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhoneX/availability?channel=1&' \
+        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/{model_name}/availability?channel=1&' \
                   'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/{model_url}/' \
-                  '{screen_size}-{space}-{color}&rv=1'.format(model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
+                  '{screen_size}-{space}-{color}&rv=1'.format(model_name='iPhoneX' if model == 'iPhone X' else 'iPhone',
+                                                              model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
                                                               model_url=model.lower().replace(' ', '-'),
                                                               screen_size=screen_size, color=color, space=space)
         return buy_url

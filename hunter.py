@@ -295,12 +295,12 @@ def hunting():
     shoot = Shoot()
 
     # 从消息队列获取订购信息，如果
-    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
+    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start(message=None):
+        # message = json.loads(message.decode())
         # 测试数据
-        # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
-        #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
-        message = json.loads(message.decode())
+        message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
+                   'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
         shoot.select_iphone(model=message['model'], color=message['color'],
                             space=message['space'], store=message['store'],
                             first_name=message['first_name'], last_name=message['last_name'],
