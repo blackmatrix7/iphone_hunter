@@ -142,15 +142,17 @@ class CommonConfig(BaseConfig):
 
     def get_buy_url(self, model, color, space):
 
-        model_name = {
+        screen_size = {
             'iPhone 8': '4.7-英寸屏幕',
             'iPhone 8 Plus': '5.5-英寸屏幕',
-        }.get(model, '5.5-英寸屏幕')
+            'iPhone X': '5.8-英寸显示屏',
+        }.get(model, '5.8-英寸显示屏')
 
-        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability?channel=1&' \
-                  'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/iphone-x/' \
-                  '{model_name}-{space}-{color}&rv=1'.format(model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
-                                                             model_name=model_name, color=color, space=space)
+        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhoneX/availability?channel=1&' \
+                  'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/{model_url}/' \
+                  '{screen_size}-{space}-{color}&rv=1'.format(model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
+                                                              model_url=model.lower().replace(' ', '-'),
+                                                              screen_size=screen_size, color=color, space=space)
         return buy_url
 
 
