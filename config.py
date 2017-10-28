@@ -148,7 +148,7 @@ class CommonConfig(BaseConfig):
         }.get(model, '5.5-英寸屏幕')
 
         buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability?channel=1&' \
-                  'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/iphone-8/' \
+                  'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/iphone-x/' \
                   '{model_name}-{space}-{color}&rv=1'.format(model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
                                                              model_name=model_name, color=color, space=space)
         return buy_url

@@ -76,8 +76,7 @@ def search_iphone():
         now = datetime.now().time()
         # 在有效的时间段内才查询库存
         if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
-            resp = requests.get(current_config['IPHONE_MODELS_URL'])
-            availability = resp.json()
+            availability = requests.get(current_config['IPHONE_MODELS_URL']).json()
             # 遍历意向购买的商店和意向购买的商品
             for store, models in buyers_info.items():
                 # 遍历意向购买的型号和对应的购买人
@@ -88,10 +87,10 @@ def search_iphone():
                         buy_info = buyers_info[store][model_number][0]
                         hash_key = hash(json.dumps(buy_info))
                         if cache.get(hash_key) is None:
-                            # 已经发送过的购买者信息，5分钟内不再发送
-                            cache.set(key=hash_key, val=True, time=300)
                             buy_info['store'] = store
                             rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buy_info)
+                            # 已经发送过的购买者信息，5分钟内不再发送
+                            cache.set(key=hash_key, val=True, time=300)
 
 if __name__ == '__main__':
     pass

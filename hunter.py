@@ -225,10 +225,10 @@ class Shoot(AutoTest):
         # 手机号
         phone_number = '18858888888'
         validate_reg_code = self.wait_find_element_by_xpath(current_config.VALIDATE_REG_CODE)
-        BTN_CONTINUE = current_config.BTN_NEED_REG_CODE_XPATH
+        btn_continue = current_config.BTN_NEED_REG_CODE_XPATH
         # 需要申请注册码的情况
         if validate_reg_code.text == '申请并验证你的注册码。':
-            BTN_CONTINUE = current_config.BTN_NEED_SEND_SMS_XPATH
+            btn_continue = current_config.BTN_NEED_SEND_SMS_XPATH
             # 验证码
             sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
             # 发送短信
@@ -257,7 +257,7 @@ class Shoot(AutoTest):
         input_reg_code.clear()
         input_reg_code.send_keys(reg_code)
         # 继续
-        btn_continue = self.wait_find_element_by_xpath(BTN_CONTINUE)
+        btn_continue = self.wait_find_element_by_xpath(btn_continue)
         btn_continue.click()
         # 如果出现注册码错误，清理缓存并重试
         # if self.is_elements_by_xpath(current_config.ERR_REG_CODE):
