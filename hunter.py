@@ -365,7 +365,7 @@ def hunting():
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start(message=None):
         message = json.loads(message.decode())
-        logging.info('猎手接收到目标：{}'.format(message))
+        logging.info('[猎手] 接收到目标：{}'.format(message))
 
         if current_config['MULTIPROCESSING'] > 1:
             import multiprocessing
