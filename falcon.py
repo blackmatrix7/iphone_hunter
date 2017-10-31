@@ -67,10 +67,7 @@ def get_apple_stores(select_city=None):
         if store['enabled'] is True:
             city = stores.setdefault(store['city'], {})
             city.update({store['storeNumber']: store['storeName']})
-    if select_city is None:
-        return stores
-    else:
-        return stores[select_city]
+    return stores if select_city is None else stores[select_city]
 
 
 @retry(max_retries=5)
@@ -91,7 +88,7 @@ def search_iphone():
                     # 获取商品型号在店内的库存
                     stock = availability['stores'][store].get(model_number, {'availability': {'unlocked': False}})
                     if stock['availability']['unlocked'] is False:
-                        logging.info('[猎鹰] 发现目标设备有效库存')
+                        logging.info('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number))
                         for buyer_info in buyers_info[store][model_number]:
                             hash_key = str(hash(json.dumps(buyer_info)))
                             if cache.get(hash_key) is None:
