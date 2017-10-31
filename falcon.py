@@ -16,7 +16,7 @@ from extensions import cache, rabbit, r
 __author__ = 'blackmatrix'
 
 
-@cache.cached('buyers')
+# @cache.cached('buyers')
 def get_buyers_info():
     """
     获取并整理买家信息，按零售店划分
@@ -90,7 +90,7 @@ def search_iphone():
                 for model_number, buyers in models.items():
                     # 获取商品型号在店内的库存
                     stock = availability['stores'][store].get(model_number, {'availability': {'unlocked': False}})
-                    if stock['availability']['unlocked'] is True:
+                    if stock['availability']['unlocked'] is False:
                         logging.info('[猎鹰] 发现目标设备有效库存')
                         for buyer_info in buyers_info[store][model_number]:
                             hash_key = str(hash(json.dumps(buyer_info)))

@@ -20,6 +20,8 @@ class CommonConfig(BaseConfig):
     APPLE_ID = 'xxxxxxxx@hotmail.com'
     APPLE_ID_PASS = 'xxxxxxxx'
 
+    EMAIL = 'xxxxxxxx@hotmail.com'
+
     # Apple Store Url
     APPLE_STORES_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
     # iPhone库存
@@ -90,9 +92,9 @@ class CommonConfig(BaseConfig):
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
-                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 1},
+                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 2},
                     {'model': 'iPhone 8 Plus', 'color': '银色', 'space': '256GB', 'quantity': 2},
-                    {'model': 'iPhone 8', 'color': '深空灰色', 'space': '64GB', 'quantity': 1}
+                    {'model': 'iPhone 8', 'color': '深空灰色', 'space': '64GB', 'quantity': 2}
                 ]
         }
     ]
@@ -119,7 +121,7 @@ class CommonConfig(BaseConfig):
 
     # 购买时间段
     WATCH_START = datetime.strptime('7:58:00', '%H:%M:%S').time()
-    WATCH_END = datetime.strptime('20:40:00', '%H:%M:%S').time()
+    WATCH_END = datetime.strptime('22:40:00', '%H:%M:%S').time()
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'

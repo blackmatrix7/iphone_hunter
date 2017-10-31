@@ -328,8 +328,8 @@ class Shoot(AutoTest):
         # 输入电子邮箱，使用Apple Id
         input_email = self.wait_find_element_by_xpath(current_config.EMAIL_XPATH)
         input_email.clear()
-        input_email.send_keys(current_config.APPLE_ID)
-        logging.info('[猎手] 已输入邮箱：{}'.format(current_config.APPLE_ID))
+        input_email.send_keys(current_config.EMAIL)
+        logging.info('[猎手] 已输入邮箱：{}'.format(current_config.EMAIL))
 
         # 输入证件信息
         select_idcard = Select(self.wait_find_element_by_xpath(current_config.GOV_ID_TYPE_XPATH))
