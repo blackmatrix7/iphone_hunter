@@ -78,12 +78,11 @@ def search_iphone():
     logging.info('[猎鹰] 开始监控设备库存信息')
     rabbit.connect()
     while True:
-        sleep(5)
-        # 购买者的信息，每次循环实时获取最新的购买者信息
-        buyers_info = get_buyers_info()
         now = datetime.now().time()
         # 在有效的时间段内才查询库存
         if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
+            # 购买者的信息，每次循环实时获取最新的购买者信息
+            buyers_info = get_buyers_info()
             availability = r.get(current_config['IPHONE_MODELS_URL']).json()
             # 遍历意向购买的商店和意向购买的商品
             for store, models in buyers_info.items():
@@ -102,6 +101,7 @@ def search_iphone():
                                 logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                 # 已经发送过的购买者信息，5分钟内不再发送
                                 cache.set(key=hash_key, val=True, time=300)
+            sleep(5)
 
 if __name__ == '__main__':
     pass
