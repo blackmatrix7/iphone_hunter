@@ -185,6 +185,7 @@ class Shoot(AutoTest):
         self.quantity = quantity
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
+        logging.info('当前链接：{}'.format(self.driver.current_url))
         logging.info('[猎手] 已打开购买页面')
         # 数量
         select_quantity = Select(self.wait_find_element_by_xpath(current_config.SELECT_QUANTITY))
@@ -202,6 +203,7 @@ class Shoot(AutoTest):
 
     @retry(max_retries=5, delay=1)
     def login_apple_id(self):
+        logging.info('当前链接：{}'.format(self.driver.current_url))
         # 如果无需登录则直接购买
         if 'signin.apple.com' not in self.driver.current_url:
             logging.info('[猎手] Apple Id 已登录')
@@ -233,6 +235,7 @@ class Shoot(AutoTest):
         申请注册码
         :return:
         """
+        logging.info('当前链接：{}'.format(self.driver.current_url))
         # 注册码，暂时没什么用，最终是通过缓存获取到用于验证的注册码
         reg_code = '123456'
         # 手机号，暂时没什么用，最终是通过缓存获取到用于验证的手机号码
@@ -300,7 +303,7 @@ class Shoot(AutoTest):
 
     @retry(max_retries=5, delay=1)
     def last_step(self):
-
+        logging.info('当前链接：{}'.format(self.driver.current_url))
         # 选择预约时间段，默认选择最晚，这样可以最大程度保证及时赶到Apple Store
         select_time = Select(self.wait_find_element_by_xpath(current_config.SELECT_TIME_XPATH))
         select_time.select_by_visible_text('下午 9:00 - 下午 9:30')

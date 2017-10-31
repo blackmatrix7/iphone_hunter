@@ -20,7 +20,7 @@ class ConfigMixin:
         raise AttributeError
 
     def __setitem__(self, key, value):
-        raise AttributeError
+        raise KeyError
 
     def __delitem__(self, key):
         raise AttributeError
