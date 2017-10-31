@@ -8,6 +8,7 @@
 import json
 import logging
 import platform
+from time import sleep
 from toolkit import retry
 from functools import partial
 from selenium import webdriver
@@ -335,6 +336,7 @@ class Shoot(AutoTest):
         btn_buy = self.wait_find_element_by_xpath(current_config.BTN_BUY_XPATH)
         btn_buy.click()
         logging.info('[猎手] 已点击预约按钮')
+        sleep(60)
 
 
 def hunting():

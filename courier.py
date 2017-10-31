@@ -7,6 +7,7 @@
 # @File : courier.py
 # @Software: PyCharm
 import json
+import logging
 from sms import SMSCenter
 from config import current_config
 from extensions import rabbit, cache
@@ -25,9 +26,14 @@ def send_msg(message=None):
     :return:
     """
     message = json.loads(message)
+    logging.info('[信使] 接收到需要验证的短信')
+
     # 发送短信前，删除所有的短信
     client.del_msgs()
+    logging.info('[信使] 删除所有短信')
     client.send_msg(targets=message['target'], content=message['content'])
+    logging.info('[信使] 验证短信已发送')
+
     # 获取短信
     sms_list = [
         {
@@ -37,8 +43,11 @@ def send_msg(message=None):
         }
         for sms in client.get_msg()
     ]
+    logging.info('[信使] 已收到短信：{}'.format(sms_list))
+
     # 将验证码写入缓存，30分钟超时
     cache.set(message['apple_id'], sms_list, time=1800)
+    logging.info('[信使] 将短信写入缓存：{}'.format(sms_list))
     # 发送短信后，再次清理所有短信
     # client.del_msgs()
     return True
