@@ -6,13 +6,17 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : cmdline.py
 # @Software: PyCharm
+import os
 import falcon
 from hunter import hunting
 from config import current_config
 from toolkit.cmdline import cmdline
+from toolkit.initlogs import log_init
 
 __author__ = 'blackmatrix'
 
+# 初始化日志配置文件
+log_init(file=os.path.abspath('logging.cfg'))
 
 if __name__ == '__main__':
 

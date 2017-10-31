@@ -6,6 +6,7 @@
 # @Blog : http://www.cnblogs.com/blackmatrix/
 # @File : extensions.py
 # @Software: PyCharm
+import requests
 from config import current_config
 from toolkit import RabbitMQ, Cache
 
@@ -14,6 +15,14 @@ __author__ = 'blackmatrix'
 rabbit = RabbitMQ(config=current_config)
 
 cache = Cache(config=current_config)
+
+r = requests.Session()
+r.headers.update(
+    {'accept': 'application/json',
+     'accept-encoding': 'gzip, deflate',
+     'accept-language': 'en-US,en;q=0.8',
+     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.79 Safari/537.36'
+     })
 
 if __name__ == '__main__':
     pass

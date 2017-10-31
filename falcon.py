@@ -6,12 +6,13 @@
 # @File : falcon.py
 # @Software: PyCharm
 import json
+import logging
 import requests
 from time import sleep
 from toolkit import retry
 from datetime import datetime
 from config import current_config
-from extensions import cache, rabbit
+from extensions import cache, rabbit, r
 
 __author__ = 'blackmatrix'
 
@@ -25,7 +26,6 @@ def get_buyers_info():
     buyers = {}
     for buyer in current_config['BUYERS']:
         buy_stores = []
-
         # 获取意向购买城市的零售店
         if buyer.get('city') is not None:
             buy_stores.extend(get_apple_stores(buyer['city']).keys())
@@ -55,7 +55,7 @@ def get_apple_stores(select_city=None):
     :return:
     """
     stores = {}
-    resp = requests.get(current_config['APPLE_STORES_URL'])
+    resp = r.get(current_config['APPLE_STORES_URL'])
     for store in resp.json()['stores']:
         if store['enabled'] is True:
             city = stores.setdefault(store['city'], {})
@@ -68,6 +68,7 @@ def get_apple_stores(select_city=None):
 
 @retry(max_retries=3)
 def search_iphone():
+    logging.info('猎鹰开始监控设备库存')
     rabbit.connect()
     while True:
         sleep(5)
@@ -76,7 +77,7 @@ def search_iphone():
         now = datetime.now().time()
         # 在有效的时间段内才查询库存
         if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
-            availability = requests.get(current_config['IPHONE_MODELS_URL']).json()
+            availability = r.get(current_config['IPHONE_MODELS_URL']).json()
             # 遍历意向购买的商店和意向购买的商品
             for store, models in buyers_info.items():
                 # 遍历意向购买的型号和对应的购买人
