@@ -260,14 +260,14 @@ class Shoot(AutoTest):
             rabbit.connect()
             self.send_message(messages={'content': sms_code.text,
                                         'target': current_config.SEND_TO,
-                                        'apple_id': current_config.APPLE_ID})
+                                        'apple_id': self.apple_id})
             logging.info('[猎手] 将验证码发送给消息队列')
             rabbit.disconnect()
 
         # 遍历获取缓存注册码
         logging.info('[猎手] 等待获取注册码短信')
         while True:
-            sms_list = cache.get(current_config.APPLE_ID)
+            sms_list = cache.get(self.apple_id)
             if sms_list:
                 logging.info('[猎手] 已获取到短信：{}'.format(sms_list))
                 break
