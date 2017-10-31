@@ -17,6 +17,9 @@ class CommonConfig(BaseConfig):
     # 项目路径
     PROJ_PATH = os.path.abspath('')
 
+    APPLE_ID = 'xxxxxxxx@hotmail.com'
+    APPLE_ID_PASS = 'xxxxxxxx'
+
     # Apple Store Url
     APPLE_STORES_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
     # iPhone库存
@@ -73,6 +76,7 @@ class CommonConfig(BaseConfig):
         {
             'first_name': '三', 'last_name': '张', 'idcard': 'xxxxxxxxx',
             'city': '上海', 'stores': None, 'quantity': 1,
+            'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
                     ['iPhone 8', '深空灰色', '64GB'],
@@ -82,6 +86,7 @@ class CommonConfig(BaseConfig):
         {
             'first_name': '四', 'last_name': '李', 'idcard': 'xxxxxxxxx',
             'city': '上海', 'stores': None, 'quantity': 1,
+            'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
                     ['iPhone 8 Plus', '银色', '256GB'],

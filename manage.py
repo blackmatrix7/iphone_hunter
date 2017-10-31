@@ -7,8 +7,6 @@
 # @File : cmdline.py
 # @Software: PyCharm
 import os
-import falcon
-from hunter import hunting
 from config import current_config
 from toolkit.cmdline import cmdline
 from toolkit.initlogs import log_init
@@ -21,6 +19,7 @@ log_init(file=os.path.abspath('logging.cfg'))
 if __name__ == '__main__':
 
     if cmdline.command == 'hunter':
+        from hunter import hunting
         if current_config['MULTIPROCESSING'] > 1:
             import multiprocessing
             pool = multiprocessing.Pool(processes=current_config['MULTIPROCESSING'])
@@ -31,6 +30,7 @@ if __name__ == '__main__':
         else:
             hunting()
     elif cmdline.command == 'falcon':
+        import falcon
         falcon.search_iphone()
     elif cmdline.command == 'courier':
         from courier import send_msg

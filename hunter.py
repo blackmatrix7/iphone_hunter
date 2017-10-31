@@ -170,11 +170,13 @@ class Shoot(AutoTest):
         self.last_name = None
         self.idcard = None
         self.quantity = None
+        self.apple_id = None
+        self.apple_id_pass = None
         self.send_message = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms')
         super().__init__()
 
     @retry(max_retries=5, delay=1)
-    def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity):
+    def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity, apple_id, apple_id_pass):
         self.model = model
         self.color = color
         self.space = space
@@ -183,6 +185,8 @@ class Shoot(AutoTest):
         self.last_name = last_name
         self.idcard = idcard
         self.quantity = quantity
+        self.apple_id = apple_id
+        self.apple_id_pass = apple_id_pass
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
         logging.info('当前链接：{}'.format(self.driver.current_url))
@@ -216,11 +220,11 @@ class Shoot(AutoTest):
             self.driver.switch_to.frame(iframe)
             # 帐号
             input_apple_id = self.wait_find_element_by_xpath(current_config.APPLE_ID_XPATH)
-            input_apple_id.send_keys(current_config.APPLE_ID)
+            input_apple_id.send_keys(self.apple_id)
             logging.info('[猎手] 输入Apple Id 帐号')
             # 密码
             input_apple_pwd = self.wait_find_element_by_xpath(current_config.APPLE_PASS_XPATH)
-            input_apple_pwd.send_keys(current_config.APPLE_ID_PASS)
+            input_apple_pwd.send_keys(self.apple_id_pass)
             logging.info('[猎手] 输入Apple Id 密码')
             # 登录
             btn_login = self.wait_find_element_by_xpath(current_config.APPLE_LOGIN_XPATH)
@@ -358,7 +362,8 @@ def hunting():
         shoot.select_iphone(model=message['model'], color=message['color'],
                             space=message['space'], store=message['store'],
                             first_name=message['first_name'], last_name=message['last_name'],
-                            idcard=message['idcard'], quantity=message['quantity'])
+                            idcard=message['idcard'], quantity=message['quantity'],
+                            apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'])
     start()
 
 
