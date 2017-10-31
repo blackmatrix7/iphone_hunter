@@ -1,3 +1,4 @@
 [gammu]
-device = COM13
+# PC COM16
+device = COM16
 connection = at19200

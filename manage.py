@@ -7,7 +7,7 @@
 # @File : cmdline.py
 # @Software: PyCharm
 import os
-from config import current_config
+import logging
 from toolkit.cmdline import cmdline
 from toolkit.initlogs import log_init
 
@@ -19,11 +19,14 @@ log_init(file=os.path.abspath('logging.cfg'))
 if __name__ == '__main__':
 
     if cmdline.command == 'hunter':
+        logging.info('[猎手] 已运行')
         from hunter import hunting
         hunting()
     elif cmdline.command == 'falcon':
+        logging.info('[猎鹰] 已运行')
         import falcon
         falcon.search_iphone()
     elif cmdline.command == 'courier':
+        logging.info('[信使] 已运行')
         from courier import send_msg
         send_msg()
