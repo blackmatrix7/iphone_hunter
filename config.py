@@ -79,7 +79,8 @@ class CommonConfig(BaseConfig):
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
-                    {'model': 'iPhone 8', 'color': '深空灰色', 'space': '64GB', 'quantity': 1},
+                    {'model': 'iPhone X', 'color': '深空灰色', 'space': '64GB', 'quantity': 2},
+                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 2},
                     {'model': 'iPhone 8', 'color': '金色', 'space': '64GB', 'quantity': 2}
                 ]
         },
@@ -89,6 +90,7 @@ class CommonConfig(BaseConfig):
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
+                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 1},
                     {'model': 'iPhone 8 Plus', 'color': '银色', 'space': '256GB', 'quantity': 2},
                     {'model': 'iPhone 8', 'color': '深空灰色', 'space': '64GB', 'quantity': 1}
                 ]
@@ -131,7 +133,7 @@ class CommonConfig(BaseConfig):
     # 轮询间隔
     POLL_FREQUENCY = 0.2
     # 进程数，不建议超过CPU核数
-    MULTIPROCESSING = 4
+    MULTIPROCESSING = 1
 
     # GAMMU
     FILECONFIG = os.path.abspath('.gammurc')

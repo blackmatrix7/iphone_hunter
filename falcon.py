@@ -89,7 +89,7 @@ def search_iphone():
                 # 遍历意向购买的型号和对应的购买人
                 for model_number, buyers in models.items():
                     # 获取商品型号在店内的库存
-                    stock = availability['stores'][store][model_number]
+                    stock = availability['stores'][store].get(model_number, {'availability': {'unlocked': False}})
                     if stock['availability']['unlocked'] is False:
                         logging.info('[猎鹰] 发现目标设备有效库存')
                         for buyer_info in buyers_info[store][model_number]:
