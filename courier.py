@@ -30,7 +30,7 @@ def send_msg(message=None):
 
     # 发送短信前，删除所有的短信
     client.del_msgs()
-    logging.info('[信使] 删除所有短信')
+    logging.info('[信使] 发送短信前，删除所有短信')
     client.send_msg(targets=message['target'], content=message['content'])
     logging.info('[信使] 验证短信已发送')
 
@@ -49,7 +49,8 @@ def send_msg(message=None):
     cache.set(message['apple_id'], sms_list, time=1800)
     logging.info('[信使] 将短信写入缓存：{}'.format(sms_list))
     # 发送短信后，再次清理所有短信
-    # client.del_msgs()
+    client.del_msgs()
+    logging.info('[信使] 发送短信后，删除所有短信')
     return True
 
 

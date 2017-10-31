@@ -37,10 +37,17 @@ def get_buyers_info():
             store = buyers.setdefault(buy_store, {})
             # 获取意向购买的型号
             for buy_model in buyer['models']:
-                model_number = current_config['MODELS'].get('{0} {1} {2}'.format(*buy_model))
+                model_number = current_config['MODELS'].get('{0} {1} {2}'.format(buy_model['model'],
+                                                                                 buy_model['color'],
+                                                                                 buy_model['space']))
                 buy_info = {k: v for k, v in buyer.items() if k in ('last_name', 'first_name', 'idcard',
-                                                                    'quantity', 'apple_id', 'apple_id_pass')}
-                buy_info.update({'model': buy_model[0], 'color': buy_model[1], 'space': buy_model[2]})
+                                                                    'apple_id', 'apple_id_pass')}
+                buy_info.update({
+                    'model': buy_model['model'],
+                    'color': buy_model['color'],
+                    'space': buy_model['space'],
+                    'quantity': buy_model['quantity']
+                })
                 store.setdefault(model_number, []).append(buy_info)
     return buyers
 
@@ -85,15 +92,15 @@ def search_iphone():
                     stock = availability['stores'][store][model_number]
                     if stock['availability']['unlocked'] is False:
                         logging.info('[猎鹰] 发现目标设备有效库存')
-                        buy_info = buyers_info[store][model_number][0]
-                        logging.info('买家信息：{}'.format(buy_info))
-                        hash_key = str(hash(json.dumps(buy_info)))
-                        # if cache.get(hash_key) is None:
-                        buy_info['store'] = store
-                        rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buy_info)
-                        logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
-                            # # 已经发送过的购买者信息，5分钟内不再发送
-                            # cache.set(key=hash_key, val=True, time=300)
+                        for buyer_info in buyers_info[store][model_number]:
+                            hash_key = str(hash(json.dumps(buyer_info)))
+                            if cache.get(hash_key) is None:
+                                buyer_info['store'] = store
+                                rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buyer_info)
+                                logging.info('买家信息：{}'.format(buyer_info))
+                                logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
+                                # 已经发送过的购买者信息，5分钟内不再发送
+                                cache.set(key=hash_key, val=True, time=10)
 
 if __name__ == '__main__':
     pass

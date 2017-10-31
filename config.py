@@ -75,22 +75,22 @@ class CommonConfig(BaseConfig):
     BUYERS = [
         {
             'first_name': '三', 'last_name': '张', 'idcard': 'xxxxxxxxx',
-            'city': '上海', 'stores': None, 'quantity': 1,
+            'city': '上海', 'stores': None,
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
-                    ['iPhone 8', '深空灰色', '64GB'],
-                    ['iPhone 8', '金色', '64GB']
+                    {'model': 'iPhone 8', 'color': '深空灰色', 'space': '64GB', 'quantity': 1},
+                    {'model': 'iPhone 8', 'color': '金色', 'space': '64GB', 'quantity': 2}
                 ]
         },
         {
             'first_name': '四', 'last_name': '李', 'idcard': 'xxxxxxxxx',
-            'city': '上海', 'stores': None, 'quantity': 1,
+            'city': '上海', 'stores': None,
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
-                    ['iPhone 8 Plus', '银色', '256GB'],
-                    ['iPhone 8', '深空灰色', '64GB']
+                    {'model': 'iPhone 8 Plus', 'color': '银色', 'space': '256GB', 'quantity': 2},
+                    {'model': 'iPhone 8', 'color': '深空灰色', 'space': '64GB', 'quantity': 1}
                 ]
         }
     ]
@@ -116,7 +116,7 @@ class CommonConfig(BaseConfig):
     }
 
     # 购买时间段
-    WATCH_START = datetime.strptime('7:55:00', '%H:%M:%S').time()
+    WATCH_START = datetime.strptime('7:58:00', '%H:%M:%S').time()
     WATCH_END = datetime.strptime('20:40:00', '%H:%M:%S').time()
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
@@ -131,7 +131,7 @@ class CommonConfig(BaseConfig):
     # 轮询间隔
     POLL_FREQUENCY = 0.2
     # 进程数，不建议超过CPU核数
-    MULTIPROCESSING = 2
+    MULTIPROCESSING = 4
 
     # GAMMU
     FILECONFIG = os.path.abspath('.gammurc')
