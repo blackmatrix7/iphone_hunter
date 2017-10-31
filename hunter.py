@@ -346,24 +346,38 @@ class Shoot(AutoTest):
         sleep(60)
 
 
-def hunting():
-
+def quick_buy(message):
     # 为每个进程单独打开一个浏览器
     shoot = Shoot()
+    # 测试数据
+    # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
+    #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
+    logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
+    shoot.select_iphone(model=message['model'], color=message['color'],
+                        space=message['space'], store=message['store'],
+                        first_name=message['first_name'], last_name=message['last_name'],
+                        idcard=message['idcard'], quantity=message['quantity'],
+                        apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'])
 
+
+def hunting():
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start(message=None):
         message = json.loads(message.decode())
         logging.info('猎手接收到目标：{}'.format(message))
-        # 测试数据
-        # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
-        #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
-        shoot.select_iphone(model=message['model'], color=message['color'],
-                            space=message['space'], store=message['store'],
-                            first_name=message['first_name'], last_name=message['last_name'],
-                            idcard=message['idcard'], quantity=message['quantity'],
-                            apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'])
+
+        if current_config['MULTIPROCESSING'] > 1:
+            import multiprocessing
+            pool = multiprocessing.Pool(processes=current_config['MULTIPROCESSING'])
+            for i in range(current_config['MULTIPROCESSING']):
+                pool.apply_async(quick_buy, kwds={'message': message})
+            pool.close()
+            pool.join()
+            return True
+        else:
+            quick_buy(message)
+
     start()
 
 

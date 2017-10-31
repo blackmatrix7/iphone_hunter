@@ -20,15 +20,7 @@ if __name__ == '__main__':
 
     if cmdline.command == 'hunter':
         from hunter import hunting
-        if current_config['MULTIPROCESSING'] > 1:
-            import multiprocessing
-            pool = multiprocessing.Pool(processes=current_config['MULTIPROCESSING'])
-            for i in range(current_config['MULTIPROCESSING']):
-                pool.apply_async(hunting)
-            pool.close()
-            pool.join()
-        else:
-            hunting()
+        hunting()
     elif cmdline.command == 'falcon':
         import falcon
         falcon.search_iphone()
