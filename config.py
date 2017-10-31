@@ -25,7 +25,7 @@ class CommonConfig(BaseConfig):
     # Apple Store Url
     APPLE_STORES_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
     # iPhone库存
-    IPHONE_MODELS_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
+    IPHONE_MODELS_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhoneX/availability.json'
 
     # Apple Xpath
     SELECT_QUANTITY = '//*[@id="quantity"]'
@@ -121,7 +121,7 @@ class CommonConfig(BaseConfig):
 
     # 购买时间段
     WATCH_START = datetime.strptime('7:58:00', '%H:%M:%S').time()
-    WATCH_END = datetime.strptime('22:40:00', '%H:%M:%S').time()
+    WATCH_END = datetime.strptime('23:59:59', '%H:%M:%S').time()
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'

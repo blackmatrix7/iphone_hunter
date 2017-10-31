@@ -8,6 +8,7 @@
 # @Software: PyCharm
 import os
 import logging
+from extensions import cache
 from toolkit.cmdline import cmdline
 from toolkit.initlogs import log_init
 
@@ -24,6 +25,7 @@ if __name__ == '__main__':
         hunting()
     elif cmdline.command == 'falcon':
         logging.info('[猎鹰] 已运行')
+        cache.delete('buyers')
         import falcon
         falcon.search_iphone()
     elif cmdline.command == 'courier':
