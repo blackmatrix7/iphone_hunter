@@ -279,6 +279,7 @@ class Shoot(AutoTest):
                 phone_number = sms['send_from']
                 reg_code = sms['text'][6:15]
                 logging.info('[猎手] 解析短信完成，注册码：{}'.format(reg_code))
+                break
 
         # 填写手机号码
         input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
