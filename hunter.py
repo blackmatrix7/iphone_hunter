@@ -172,11 +172,14 @@ class Shoot(AutoTest):
         self.quantity = None
         self.apple_id = None
         self.apple_id_pass = None
+        self.email = current_config.EMAIL
         self.send_message = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms')
         super().__init__()
 
     @retry(max_retries=5, delay=1)
-    def select_iphone(self, model, color, space, store, first_name, last_name, idcard, quantity, apple_id, apple_id_pass):
+    def select_iphone(self, model, color, space, store,
+                      first_name, last_name, idcard, quantity,
+                      apple_id, apple_id_pass, email):
         self.model = model
         self.color = color
         self.space = space
@@ -186,6 +189,7 @@ class Shoot(AutoTest):
         self.idcard = idcard
         self.quantity = quantity
         self.apple_id = apple_id
+        self.email = email
         self.apple_id_pass = apple_id_pass
         # 打开购买页面
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
@@ -326,11 +330,11 @@ class Shoot(AutoTest):
         input_first_name.send_keys(self.first_name)
         logging.info('[猎手] 已输入名：{}'.format(self.first_name))
 
-        # 输入电子邮箱，使用Apple Id
+        # 输入电子邮箱，支持为每个购买者配置单独的邮箱
         input_email = self.wait_find_element_by_xpath(current_config.EMAIL_XPATH)
         input_email.clear()
-        input_email.send_keys(current_config.EMAIL)
-        logging.info('[猎手] 已输入邮箱：{}'.format(current_config.EMAIL))
+        input_email.send_keys(self.email)
+        logging.info('[猎手] 已输入邮箱：{}'.format(self.email))
 
         # 输入证件信息
         select_idcard = Select(self.wait_find_element_by_xpath(current_config.GOV_ID_TYPE_XPATH))
@@ -344,7 +348,10 @@ class Shoot(AutoTest):
         btn_buy = self.wait_find_element_by_xpath(current_config.BTN_BUY_XPATH)
         btn_buy.click()
         logging.info('[猎手] 已点击预约按钮')
+
+        # 暂定休眠60秒后，关闭浏览器
         sleep(60)
+        self.driver.close()
 
 
 def quick_buy(message):
@@ -358,7 +365,8 @@ def quick_buy(message):
                         space=message['space'], store=message['store'],
                         first_name=message['first_name'], last_name=message['last_name'],
                         idcard=message['idcard'], quantity=message['quantity'],
-                        apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'])
+                        apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'],
+                        email=message['email'])
 
 
 def hunting():

@@ -42,7 +42,7 @@ def get_buyers_info():
                                                                                  buy_model['color'],
                                                                                  buy_model['space']))
                 buy_info = {k: v for k, v in buyer.items() if k in ('last_name', 'first_name', 'idcard',
-                                                                    'apple_id', 'apple_id_pass')}
+                                                                    'apple_id', 'apple_id_pass', 'email')}
                 buy_info.update({
                     'model': buy_model['model'],
                     'color': buy_model['color'],
@@ -87,17 +87,16 @@ def search_iphone():
                 for model_number, buyers in models.items():
                     # 获取商品型号在店内的库存
                     stock = availability['stores'][store][model_number]
-                    if stock['availability']['unlocked'] is True:
+                    if stock['availability']['unlocked'] is False:
                         logging.info('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number))
                         for buyer_info in buyers_info[store][model_number]:
-                            hash_key = str(hash(json.dumps(buyer_info)))
-                            if cache.get(hash_key) is None:
+                            if cache.get(buyer_info['idcard']) is None:
                                 buyer_info['store'] = store
                                 rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buyer_info)
                                 logging.info('买家信息：{}'.format(buyer_info))
                                 logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                 # 已经发送过的购买者信息，5分钟内不再发送
-                                cache.set(key=hash_key, val=True, time=300)
+                                cache.set(key=buyer_info['idcard'], val=True, time=300)
             sleep(5)
 
 if __name__ == '__main__':
