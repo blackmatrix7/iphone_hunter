@@ -206,8 +206,8 @@ class Shoot(AutoTest):
         # 继续
         btn_to_login = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
         btn_to_login.click()
-        self.login_apple_id()
         logging.info('[猎手] 点击继续按钮，跳转到下一页')
+        self.login_apple_id()
 
     @retry(max_retries=5, delay=1)
     def login_apple_id(self):
@@ -282,7 +282,7 @@ class Shoot(AutoTest):
             if '注册码' in sms['text']:
                 phone_number = sms['send_from']
                 reg_code = sms['text'][6:15]
-                logging.info('[猎手] 解析短信完成，注册码：{}'.format(reg_code))
+                logging.info('[猎手] 解析短信完成，apple id：{0}，注册码：{1}'.format(self.apple_id, reg_code))
                 break
 
         # 填写手机号码

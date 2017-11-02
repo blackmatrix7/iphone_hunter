@@ -46,11 +46,14 @@ def send_msg(message=None):
     logging.info('[信使] 已收到短信：{}'.format(sms_list))
 
     # 将验证码写入缓存，30分钟超时
-    cache.set(message['apple_id'], sms_list, time=1800)
+    cache.set(message['apple_id'], sms_list, time=1750)
     logging.info('[信使] 将短信写入缓存：{}'.format(sms_list))
     # 发送短信后，再次清理所有短信
     client.del_msgs()
     logging.info('[信使] 发送短信后，删除所有短信')
+    # 临时加入一个延迟的方法，避免一个号码连续发送两次
+    from time import sleep
+    sleep(30)
     return True
 
 
