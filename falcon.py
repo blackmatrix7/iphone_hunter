@@ -5,7 +5,6 @@
 # @Site : 
 # @File : falcon.py
 # @Software: PyCharm
-import json
 import logging
 from time import sleep
 from toolkit import retry
@@ -87,7 +86,7 @@ def search_iphone():
                 for model_number, buyers in models.items():
                     # 获取商品型号在店内的库存
                     stock = availability['stores'][store][model_number]
-                    if stock['availability']['unlocked'] is False:
+                    if stock['availability']['unlocked'] is True:
                         logging.info('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number))
                         for buyer_info in buyers_info[store][model_number]:
                             if cache.get(buyer_info['idcard']) is None:

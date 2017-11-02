@@ -1,4 +1,5 @@
 [gammu]
 # PC COM16
-device = COM16
+# 前面板 左 COM8 右 COM3
+device = COM3
 connection = at19200
