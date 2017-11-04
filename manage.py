@@ -26,12 +26,9 @@ if __name__ == '__main__':
     elif cmdline.command == 'falcon':
         logging.info('[猎鹰] 已运行')
         cache.delete('buyers')
-        cache.flush_all()
         import falcon
         falcon.search_iphone()
     elif cmdline.command == 'courier':
         logging.info('[信使] 已运行')
         from courier import send_msg
         send_msg()
-    elif cmdline.command == 'shoot':
-        logging.info('[射手] 已运行')
