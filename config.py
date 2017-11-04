@@ -121,7 +121,7 @@ class CommonConfig(BaseConfig):
 
     # 购买时间段
     WATCH_START = datetime.strptime('7:58:00', '%H:%M:%S').time()
-    WATCH_END = datetime.strptime('23:59:59', '%H:%M:%S').time()
+    WATCH_END = datetime.strptime('20:30:00', '%H:%M:%S').time()
 
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'

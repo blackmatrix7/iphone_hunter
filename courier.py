@@ -17,6 +17,9 @@ __author__ = 'blackmatrix'
 
 client = SMSCenter()
 
+# client.get_msg()
+# client.send_msg(targets='18121419623', content='是我 2601')
+
 
 @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
 def send_msg(message=None):
@@ -25,7 +28,7 @@ def send_msg(message=None):
     :param message:
     :return:
     """
-    message = json.loads(message)
+    message = json.loads(message.decode('utf8'))
     logging.info('[信使] 接收到需要验证的短信')
 
     # 发送短信前，删除所有的短信

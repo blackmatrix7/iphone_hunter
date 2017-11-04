@@ -26,6 +26,7 @@ if __name__ == '__main__':
     elif cmdline.command == 'falcon':
         logging.info('[猎鹰] 已运行')
         cache.delete('buyers')
+        cache.flush_all()
         import falcon
         falcon.search_iphone()
     elif cmdline.command == 'courier':
@@ -34,9 +35,3 @@ if __name__ == '__main__':
         send_msg()
     elif cmdline.command == 'shoot':
         logging.info('[射手] 已运行')
-        from hunter import quick_buy
-        message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'quantity': 1,
-                   'store': 'R388', 'email': 'xxxxxxx@hotmail.com',
-                   'apple_id': 'xxxxxxx@hotmail.com', 'apple_id_pass': 'XXXXXXXXXXX',
-                   'first_name': '振', 'last_name': '李', 'idcard': '3708301989xxxxxxxx'}
-        quick_buy(message)
