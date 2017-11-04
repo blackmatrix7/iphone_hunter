@@ -259,7 +259,7 @@ class Shoot(AutoTest):
             btn_continue = current_config.BTN_NEED_SEND_SMS_XPATH
             # 验证码
             sms_code = self.wait_find_element_by_xpath(current_config.SMS_CODE_XPATH)
-            logging.info('[猎手] 页面验证码为{}'.format(sms_code))
+            logging.info('[猎手] 页面验证码为{}'.format(sms_code.text))
             # 发送短信
             rabbit.connect()
             self.send_message(messages={'content': sms_code.text,
