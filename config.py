@@ -131,11 +131,11 @@ class CommonConfig(BaseConfig):
 
     # selenium 配置
     # 全局超时时间
-    TIME_OUT = 60
+    TIME_OUT = 120
     # 轮询间隔
     POLL_FREQUENCY = 0.2
     # 进程数，不建议超过CPU核数
-    MULTIPROCESSING = 4
+    MULTIPROCESSING = 1
 
     # GAMMU
     FILECONFIG = os.path.abspath('.gammurc')

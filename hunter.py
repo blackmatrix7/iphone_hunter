@@ -203,39 +203,42 @@ class Shoot(AutoTest):
         select_store = Select(self.wait_find_element_by_xpath(current_config['SELECT_STORE']))
         select_store.select_by_value(store)
         logging.info('[猎手] 已选择零售店{}'.format(store))
+
         # 继续
         btn_to_login = self.wait_find_element_by_xpath(current_config['BTN_TO_LOGIN'])
         btn_to_login.click()
         logging.info('[猎手] 点击继续按钮，跳转到下一页')
-        self.login_apple_id()
+        if self.driver.current_url == 'https://www.apple.com/cn/iphone/':
+            # 说明预约失败
+            return True
+        elif 'signin.apple.com' in self.driver.current_url:
+            # 需要登录
+            self.login_apple_id()
+        else:
+            # 已经登录
+            self.send_reg_code()
 
     @retry(max_retries=5, delay=1)
     def login_apple_id(self):
         logging.info('[猎手] 当前链接：{}'.format(self.driver.current_url))
-        # 如果无需登录则直接购买
-        if 'signin.apple.com' not in self.driver.current_url:
-            logging.info('[猎手] Apple Id 已登录')
-            logging.info('[猎手] 准备跳转短信验证页面')
-            self.send_reg_code()
-        else:
-            # 切换到iframe
-            logging.info('[猎手] 准备登录Apple Id')
-            iframe = self.wait_find_element_by_xpath('//*[@id="aid-auth-widget-iFrame"]')
-            self.driver.switch_to.frame(iframe)
-            # 帐号
-            input_apple_id = self.wait_find_element_by_xpath(current_config.APPLE_ID_XPATH)
-            input_apple_id.send_keys(self.apple_id)
-            logging.info('[猎手] 输入Apple Id 帐号')
-            # 密码
-            input_apple_pwd = self.wait_find_element_by_xpath(current_config.APPLE_PASS_XPATH)
-            input_apple_pwd.send_keys(self.apple_id_pass)
-            logging.info('[猎手] 输入Apple Id 密码')
-            # 登录
-            btn_login = self.wait_find_element_by_xpath(current_config.APPLE_LOGIN_XPATH)
-            btn_login.click()
-            logging.info('[猎手] 点击登录按钮')
-            self.send_reg_code()
-            logging.info('[猎手] 准备跳转短信验证页面')
+        # 切换到iframe
+        logging.info('[猎手] 准备登录Apple Id')
+        iframe = self.wait_find_element_by_xpath('//*[@id="aid-auth-widget-iFrame"]')
+        self.driver.switch_to.frame(iframe)
+        # 帐号
+        input_apple_id = self.wait_find_element_by_xpath(current_config.APPLE_ID_XPATH)
+        input_apple_id.send_keys(self.apple_id)
+        logging.info('[猎手] 输入Apple Id 帐号')
+        # 密码
+        input_apple_pwd = self.wait_find_element_by_xpath(current_config.APPLE_PASS_XPATH)
+        input_apple_pwd.send_keys(self.apple_id_pass)
+        logging.info('[猎手] 输入Apple Id 密码')
+        # 登录
+        btn_login = self.wait_find_element_by_xpath(current_config.APPLE_LOGIN_XPATH)
+        btn_login.click()
+        logging.info('[猎手] 点击登录按钮')
+        self.send_reg_code()
+        logging.info('[猎手] 准备跳转短信验证页面')
 
     @retry(max_retries=5, delay=1)
     def send_reg_code(self):
@@ -255,6 +258,9 @@ class Shoot(AutoTest):
 
         # 需要申请注册码的情况
         if validate_reg_code.text == '申请并验证你的注册码。':
+            # 说明验证码已经过期，清理掉
+            cache.delete(self.apple_id)
+            # 重新申请一个
             logging.info('[猎手] 需要申请注册码')
             btn_continue = current_config.BTN_NEED_SEND_SMS_XPATH
             # 验证码
@@ -299,6 +305,7 @@ class Shoot(AutoTest):
 
         # 继续
         btn_continue = self.wait_find_element_by_xpath(btn_continue)
+        sleep(1)
         btn_continue.click()
         logging.info('[猎手] 点击继续按钮')
         # 如果出现注册码错误，清理缓存并重试
@@ -307,8 +314,8 @@ class Shoot(AutoTest):
         #     if err_reg_code.is_displayed() is True:
         #         cache.delete(current_config.APPLE_ID)
         #         raise ErrorBuy
-        self.last_step()
         logging.info('[猎手] 准备进行最后一步预约')
+        self.last_step()
 
     @retry(max_retries=5, delay=1)
     def last_step(self):
@@ -355,37 +362,43 @@ class Shoot(AutoTest):
 
 
 def quick_buy(message):
-    # 为每个进程单独打开一个浏览器
-    shoot = Shoot()
-    # 测试数据
-    # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
-    #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
-    logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
-    shoot.select_iphone(model=message['model'], color=message['color'],
-                        space=message['space'], store=message['store'],
-                        first_name=message['first_name'], last_name=message['last_name'],
-                        idcard=message['idcard'], quantity=message['quantity'],
-                        apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'],
-                        email=message['email'])
+    try:
+        # 为每个进程单独打开一个浏览器
+        shoot = Shoot()
+        # 测试数据
+        # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
+        #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
+        logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
+        shoot.select_iphone(model=message['model'], color=message['color'],
+                            space=message['space'], store=message['store'],
+                            first_name=message['first_name'], last_name=message['last_name'],
+                            idcard=message['idcard'], quantity=message['quantity'],
+                            apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'],
+                            email=message['email'])
+    except Exception as ex:
+        logging.error(ex)
+        return True
 
 
 def hunting():
+
+    # 为每个进程单独打开一个浏览器
+    shoot = Shoot()
+
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start(message=None):
         message = json.loads(message.decode())
-        logging.info('[猎手] 接收到目标：{}'.format(message))
-
-        if current_config['MULTIPROCESSING'] > 1:
-            import multiprocessing
-            pool = multiprocessing.Pool(processes=current_config['MULTIPROCESSING'])
-            for i in range(current_config['MULTIPROCESSING']):
-                pool.apply_async(quick_buy, kwds={'message': message})
-            pool.close()
-            pool.join()
-            return True
-        else:
-            quick_buy(message)
+        # 测试数据
+        # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
+        #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
+        logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
+        shoot.select_iphone(model=message['model'], color=message['color'],
+                            space=message['space'], store=message['store'],
+                            first_name=message['first_name'], last_name=message['last_name'],
+                            idcard=message['idcard'], quantity=message['quantity'],
+                            apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'],
+                            email=message['email'])
 
     start()
 
