@@ -149,20 +149,15 @@ class CommonConfig(BaseConfig):
     # Cache
     CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
 
-    def get_buy_url(self, model, color, space):
+    def get_part_num(self, model, color, space):
+        return self.MODELS.get('{0} {1} {2}'.format(model, color, space))
 
-        screen_size = {
-            'iPhone 8': '4.7-英寸屏幕',
-            'iPhone 8 Plus': '5.5-英寸屏幕',
-            'iPhone X': '5.8-英寸显示屏',
-        }.get(model, '5.8-英寸显示屏')
+    @staticmethod
+    def get_buy_url(part_num, quantity, store):
 
-        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/{model_name}/availability?channel=1&' \
-                  'appleCare=N&iPP=N&partNumber={model}&path=/cn/shop/buy-iphone/{model_url}/' \
-                  '{screen_size}-{space}-{color}&rv=1'.format(model_name='iPhoneX' if model == 'iPhone X' else 'iPhone',
-                                                              model=self.MODELS['{0} {1} {2}'.format(model, color, space)],
-                                                              model_url=model.lower().replace(' ', '-'),
-                                                              screen_size=screen_size, color=color, space=space)
+        buy_url = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhoneX?quantity={quantity}&' \
+                  'store={store}&partNumber={part_num}&channel=1&sourceID=&iUID=&iuToken=&' \
+                  'iUP=N&appleCare=&rv=&path=&plan=unlocked'.format(part_num=part_num, quantity=quantity, store=store)
         return buy_url
 
     @staticmethod

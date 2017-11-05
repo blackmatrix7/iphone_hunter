@@ -18,10 +18,10 @@ cache = Cache(config=current_config)
 
 r = requests.Session()
 r.headers.update(
-    {'accept': 'application/json',
-     'accept-encoding': 'gzip, deflate',
-     'accept-language': 'en-US,en;q=0.8',
-     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.79 Safari/537.36'
+    {'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+     'accept-encoding': 'gzip, deflate, sdch, br',
+     'accept-language': 'zh-CN,zh;q=0.8',
+     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
      })
 
 if __name__ == '__main__':

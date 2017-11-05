@@ -91,13 +91,14 @@ def search_iphone():
                         for buyer_info in buyers_info[store][model_number]:
                             if cache.get(buyer_info['idcard']) is None:
                                 buyer_info['store'] = store
+                                buyer_info['part_num'] = model_number
                                 rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buyer_info)
                                 logging.info('买家信息：{}'.format(buyer_info))
                                 logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                 # 已经发送过的购买者信息，5分钟内不再发送
-                                cache.set(key=buyer_info['idcard'], val=True, time=300)
+                                # cache.set(key=buyer_info['idcard'], val=True, time=300)
             logging.info('[猎鹰] 暂时没有发现有效库存')
-            sleep(5)
+            sleep(10)
 
 if __name__ == '__main__':
     pass
