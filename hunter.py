@@ -431,12 +431,8 @@ def hunting():
 
             print(resp)
         else:
-            logging.warning('[猎手] 待处理的链接{}'.format(next_url))
+            logging.warning('[猎手] 您的IP可能被Ban，请更换。待处理的链接{}'.format(next_url))
             return True
-
-
-
-
 
     start()
 
