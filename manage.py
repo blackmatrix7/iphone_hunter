@@ -32,9 +32,3 @@ if __name__ == '__main__':
         logging.info('[信使] 已运行')
         from courier import send_msg
         send_msg()
-    elif cmdline.command == 'shoot':
-        from extensions import r
-        # 模拟 GET 请求
-        resp1 = r.get('https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhoneX?quantity=1&store=R389&partNumber=MQA62CH%2FA&channel=1&sourceID=&iUID=&iuToken=&iUP=N&appleCare=&rv=&path=&plan=unlocked', allow_redirects=False)
-
-        print(resp1.headers['Location'])
