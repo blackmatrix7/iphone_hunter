@@ -165,16 +165,6 @@ class CommonConfig(BaseConfig):
                                                               screen_size=screen_size, color=color, space=space)
         return buy_url
 
-    @staticmethod
-    def get_name_by_model(model):
-        """
-        通过设备型号获取对应的中文名称
-        :param model: 
-        :return: 
-        """
-        pass
-
-
 commoncfg = CommonConfig()
 
 configs = {
