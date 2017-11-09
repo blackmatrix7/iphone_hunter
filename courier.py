@@ -17,9 +17,6 @@ __author__ = 'blackmatrix'
 
 client = SMSCenter()
 
-# client.get_msg()
-# client.send_msg(targets='18121419623', content='是我 2601')
-
 
 @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
 def send_msg(message=None):
