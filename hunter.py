@@ -389,17 +389,21 @@ def hunting():
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyers', routing_key='apple')
     def start(message=None):
-        message = json.loads(message.decode())
-        # 测试数据
-        # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
-        #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
-        logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
-        shoot.select_iphone(model=message['model'], color=message['color'],
-                            space=message['space'], store=message['store'],
-                            first_name=message['first_name'], last_name=message['last_name'],
-                            idcard=message['idcard'], quantity=message['quantity'],
-                            apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'],
-                            email=message['email'])
+        try:
+            message = json.loads(message.decode())
+            # 测试数据
+            # message = {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'store': 'R600',
+            #            'first_name': '三', 'last_name': '李', 'idcard': 123122222, 'quantity': 1}
+            logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
+            shoot.select_iphone(model=message['model'], color=message['color'],
+                                space=message['space'], store=message['store'],
+                                first_name=message['first_name'], last_name=message['last_name'],
+                                idcard=message['idcard'], quantity=message['quantity'],
+                                apple_id=message['apple_id'], apple_id_pass=message['apple_id_pass'],
+                                email=message['email'])
+        except Exception as ex:
+            logging.error('[猎手] {}'.format(ex))
+            return True
 
     start()
 
