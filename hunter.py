@@ -176,7 +176,7 @@ class Shoot(AutoTest):
         self.send_message = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms')
         super().__init__()
 
-    @retry(max_retries=5, delay=1)
+    @retry(max_retries=5, delay=1, callback=logging.error)
     def select_iphone(self, model, color, space, store,
                       first_name, last_name, idcard, quantity,
                       apple_id, apple_id_pass, email):
