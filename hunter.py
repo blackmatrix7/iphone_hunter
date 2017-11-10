@@ -387,7 +387,7 @@ def hunting():
     shoot = Shoot()
 
     # 从消息队列获取订购信息，如果
-    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
+    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyers', routing_key='apple')
     def start(message=None):
         message = json.loads(message.decode())
         # 测试数据
