@@ -69,7 +69,7 @@ def get_apple_stores(select_city=None):
     return stores if select_city is None else stores[select_city]
 
 
-@retry(max_retries=5)
+@retry(max_retries=60)
 def search_iphone():
     logging.info('[猎鹰] 开始监控设备库存信息')
     rabbit.connect()
@@ -91,13 +91,14 @@ def search_iphone():
                         for buyer_info in buyers_info[store][model_number]:
                             if cache.get(buyer_info['idcard']) is None:
                                 buyer_info['store'] = store
-                                rabbit.send_message(exchange_name='iphone', queue_name='buyer', messages=buyer_info)
+                                rabbit.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
                                 logging.info('买家信息：{}'.format(buyer_info))
                                 logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                 # 已经发送过的购买者信息，5分钟内不再发送
                                 cache.set(key=buyer_info['idcard'], val=True, time=300)
             logging.info('[猎鹰] 暂时没有发现有效库存')
             sleep(5)
+
 
 if __name__ == '__main__':
     pass
