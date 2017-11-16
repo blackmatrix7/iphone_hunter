@@ -80,24 +80,25 @@ def search_iphone():
             # 购买者的信息，每次循环实时获取最新的购买者信息
             buyers_info = get_buyers_info()
             availability = r.get(current_config['IPHONE_MODELS_URL']).json()
-            # 遍历意向购买的商店和意向购买的商品
-            for store, models in buyers_info.items():
-                # 遍历意向购买的型号和对应的购买人
-                for model_number, buyers in models.items():
-                    # 获取商品型号在店内的库存
-                    stock = availability['stores'][store][model_number]
-                    if stock['availability']['unlocked'] is True:
-                        logging.info('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number))
-                        for buyer_info in buyers_info[store][model_number]:
-                            if cache.get(buyer_info['idcard']) is None:
-                                buyer_info['store'] = store
-                                rabbit.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
-                                logging.info('买家信息：{}'.format(buyer_info))
-                                logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
-                                # 已经发送过的购买者信息，5分钟内不再发送
-                                cache.set(key=buyer_info['idcard'], val=True, time=300)
-            logging.info('[猎鹰] 暂时没有发现有效库存')
-            sleep(5)
+            if availability['stores']:
+                # 遍历意向购买的商店和意向购买的商品
+                for store, models in buyers_info.items():
+                    # 遍历意向购买的型号和对应的购买人
+                    for model_number, buyers in models.items():
+                        # 获取商品型号在店内的库存
+                        stock = availability['stores'][store][model_number]
+                        if stock['availability']['unlocked'] is True:
+                            logging.info('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number))
+                            for buyer_info in buyers_info[store][model_number]:
+                                if cache.get(buyer_info['idcard']) is None:
+                                    buyer_info['store'] = store
+                                    rabbit.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
+                                    logging.info('买家信息：{}'.format(buyer_info))
+                                    logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
+                                    # 已经发送过的购买者信息，5分钟内不再发送
+                                    cache.set(key=buyer_info['idcard'], val=True, time=300)
+                logging.info('[猎鹰] 暂时没有发现有效库存')
+                sleep(5)
 
 
 if __name__ == '__main__':
