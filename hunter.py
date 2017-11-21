@@ -192,6 +192,7 @@ class Shoot(AutoTest):
         self.email = email
         self.apple_id_pass = apple_id_pass
         # 打开购买页面
+        logging.info('[猎手] 正在打开购买页面')
         self.driver.get(current_config.get_buy_url(model=model, color=color, space=space))
         logging.info('[猎手] 当前链接：{}'.format(self.driver.current_url))
         logging.info('[猎手] 已打开购买页面')
