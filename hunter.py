@@ -387,6 +387,7 @@ def hunting():
     # 为每个进程单独打开一个浏览器
     shoot = Shoot()
 
+    @retry(max_retries=10, delay=30)
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyers', routing_key='apple')
     def start(message=None):

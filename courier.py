@@ -9,6 +9,7 @@
 import json
 import logging
 from sms import SMSCenter
+from toolkit import retry
 from config import current_config
 from extensions import rabbit, cache
 
@@ -18,6 +19,7 @@ __author__ = 'blackmatrix'
 client = SMSCenter()
 
 
+@retry(max_retries=10, delay=30)
 @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
 def send_msg(message=None):
     """
