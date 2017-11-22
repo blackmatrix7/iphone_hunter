@@ -387,9 +387,21 @@ send_msg = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms'
 def hunting():
 
     # 从消息队列获取订购信息，如果
-    @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
+    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
     def start(message=None):
-        message = json.loads(message.decode('utf-8'))
+        # message = json.loads(message.decode('utf-8'))
+        message = {'email': 'liyang22333@hotmail.com',
+                   'last_name': '李',
+                   'model': 'iPhone X',
+                   'quantity': 1,
+                   'space': '256GB',
+                   'first_name': '阳',
+                   'apple_id': 'liyang22333@hotmail.com',
+                   'color': '深空灰色',
+                   'idcard': '1111111111111',
+                   'apple_id_pass': 'liyang223336210',
+                   'store': 'R359',
+                   'part_num': 'MQA82CH/A'}
         logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
 
         # 选择店铺、机型、和数量
@@ -406,7 +418,7 @@ def hunting():
                 next_url = resp.headers['Location']
                 r.get(next_url)
                 resp = r.post('https://signin.apple.com/appleauth/auth/signin',
-                              json={'accountName': 'pcbat@foxmail.com', 'password': ',7/=G3c}t93/D63?', 'rememberMe': False},
+                              json={'accountName': 'xxxxxx@foxmail.com', 'password': 'xxxxxxx', 'rememberMe': False},
                               headers={'Content-Type': 'application/json'})
                 print(resp)
                 resp = r.get('https://signin.apple.com/IDMSWebAuth/signin', allow_redirects=False)
