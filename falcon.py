@@ -69,7 +69,7 @@ def get_apple_stores(select_city=None):
     return stores if select_city is None else stores[select_city]
 
 
-@retry(max_retries=60, delay=30)
+@retry(max_retries=60, step=0.5)
 def search_iphone():
     logging.info('[猎鹰] 开始监控设备库存信息')
     while True:
