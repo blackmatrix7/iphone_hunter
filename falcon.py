@@ -97,6 +97,8 @@ def search_iphone():
                                     logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                     # 已经发送过的购买者信息，5分钟内不再发送
                                     cache.set(key=buyer_info['idcard'], val=True, time=300)
+                else:
+                    logging.info('[猎鹰] 没有发现有效库存')
                 sleep(3)
 
 
