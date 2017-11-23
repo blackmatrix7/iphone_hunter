@@ -52,7 +52,7 @@ def get_buyers_info():
     return buyers
 
 
-@cache.cached('apple_stores')
+@cache.cached('apple_stores', timeout=345600)
 @retry(max_retries=10)
 def get_apple_stores(select_city=None):
     """
@@ -66,7 +66,7 @@ def get_apple_stores(select_city=None):
         if store['enabled'] is True:
             city = stores.setdefault(store['city'], {})
             city.update({store['storeNumber']: store['storeName']})
-    return stores if select_city is None else stores[select_city]
+    return stores if select_city is None else stores.get(select_city)
 
 
 @retry(max_retries=60, step=0.5)
