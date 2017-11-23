@@ -93,7 +93,7 @@ def search_iphone():
                                 if cache.get(buyer_info['idcard']) is None:
                                     buyer_info['store'] = store
                                     with rabbit as mq:
-                                        mq.send_message(exchange_name='iphone', queue_name='buyers1', messages=buyer_info)
+                                        mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
                                     logging.info('买家信息：{}'.format(buyer_info))
                                     logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                     # 已经发送过的购买者信息，5分钟内不再发送
