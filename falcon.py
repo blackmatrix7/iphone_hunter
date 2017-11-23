@@ -16,6 +16,7 @@ __author__ = 'blackmatrix'
 
 
 @cache.cached('buyers')
+@retry(max_retries=60, sleep=1, callback=logging.error)
 def get_buyers_info():
     """
     获取并整理买家信息，按零售店划分
@@ -53,7 +54,7 @@ def get_buyers_info():
 
 
 @cache.cached('apple_stores', timeout=345600)
-@retry(max_retries=10)
+@retry(max_retries=60, sleep=1, callback=logging.error)
 def get_apple_stores(select_city=None):
     """
     获取所有的Apple Store信息，并按城市分类
@@ -69,7 +70,7 @@ def get_apple_stores(select_city=None):
     return stores if select_city is None else stores.get(select_city)
 
 
-@retry(max_retries=60, step=0.5)
+@retry(max_retries=60, step=0.5, callback=logging.error)
 def search_iphone():
     logging.info('[猎鹰] 开始监控设备库存信息')
     while True:

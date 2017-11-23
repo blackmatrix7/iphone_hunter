@@ -26,6 +26,7 @@ if __name__ == '__main__':
     elif cmdline.command == 'falcon':
         logging.info('[猎鹰] 已运行')
         cache.delete('buyers')
+        cache.delete('apple_stores')
         import falcon
         falcon.search_iphone()
     elif cmdline.command == 'courier':
