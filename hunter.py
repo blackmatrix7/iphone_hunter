@@ -322,7 +322,6 @@ class Shoot(AutoTest):
     def last_step(self):
         logging.info('[猎手] 当前链接：{}'.format(self.driver.current_url))
         # 选择预约时间段，默认选择最晚，这样可以最大程度保证及时赶到Apple Store
-        sleep(60)
         select_time = Select(self.wait_find_element_by_xpath(current_config.SELECT_TIME_XPATH))
         select_time.select_by_visible_text('下午 8:00 - 下午 8:30')
         logging.info('[猎手] 选择预约时间段：下午 8:00 - 下午 8:30')
