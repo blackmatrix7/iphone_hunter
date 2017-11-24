@@ -53,7 +53,7 @@ def get_buyers_info():
     return buyers
 
 
-@cache.cached('apple_stores', timeout=345600)
+# @cache.cached('apple_stores', timeout=345600)
 @retry(max_retries=60, sleep=1, callback=logging.error)
 def get_apple_stores(select_city=None):
     """
