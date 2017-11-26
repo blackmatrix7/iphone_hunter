@@ -322,7 +322,6 @@ class Shoot(AutoTest):
     def last_step(self):
         logging.info('[猎手] 当前链接：{}'.format(self.driver.current_url))
         # 选择预约时间段，默认选择最晚，这样可以最大程度保证及时赶到Apple Store
-        sleep(60)
         select_time = Select(self.wait_find_element_by_xpath(current_config.SELECT_TIME_XPATH))
         select_time.select_by_visible_text('下午 8:00 - 下午 8:30')
         logging.info('[猎手] 选择预约时间段：下午 8:00 - 下午 8:30')
@@ -387,7 +386,7 @@ def hunting():
     # 为每个进程单独打开一个浏览器
     shoot = Shoot()
 
-    @retry(max_retries=10, delay=30)
+    @retry(max_retries=5, delay=1)
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyers', routing_key='apple')
     def start(message=None):
