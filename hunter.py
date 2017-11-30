@@ -11,6 +11,7 @@ import platform
 from time import sleep
 from toolkit import retry
 from functools import partial
+from datetime import datetime
 from selenium import webdriver
 from operator import itemgetter
 from config import current_config
@@ -390,6 +391,11 @@ def hunting():
     # 从消息队列获取订购信息，如果
     @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyers', routing_key='apple')
     def start(message=None):
+        # 当前时间
+        now = datetime.now().time()
+        # 监控时间段内的消息直接消费掉
+        if current_config['WATCH_END'] < now:
+            return True
         try:
             message = json.loads(message.decode())
             # 测试数据
