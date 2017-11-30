@@ -54,7 +54,7 @@ def get_buyers_info():
 
 
 # @cache.cached('apple_stores', timeout=345600)
-@retry(max_retries=60, sleep=1, callback=logging.error)
+# @retry(max_retries=60, sleep=1, callback=logging.error)
 def get_apple_stores(select_city=None):
     """
     获取所有的Apple Store信息，并按城市分类
