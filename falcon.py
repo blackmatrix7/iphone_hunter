@@ -5,6 +5,8 @@
 # @Site : 
 # @File : falcon.py
 # @Software: PyCharm
+import os
+import pickle
 import logging
 from time import sleep
 from toolkit import retry
@@ -53,20 +55,26 @@ def get_buyers_info():
     return buyers
 
 
-# @cache.cached('apple_stores', timeout=345600)
-# @retry(max_retries=60, sleep=1, callback=logging.error)
+@retry(max_retries=60, sleep=1, callback=logging.error)
 def get_apple_stores(select_city=None):
     """
     获取所有的Apple Store信息，并按城市分类
     也可以获取单个城市的零售店信息
     :return:
     """
-    stores = {}
-    resp = r.get(current_config['APPLE_STORES_URL'])
-    for store in resp.json()['stores']:
-        if store['enabled'] is True:
-            city = stores.setdefault(store['city'], {})
-            city.update({store['storeNumber']: store['storeName']})
+    try:
+        file = open('stores', 'rb')
+        stores = pickle.load(file)
+    except EOFError as ex:
+        print(type(ex))
+        stores = {}
+        resp = r.get(current_config['APPLE_STORES_URL'])
+        for store in resp.json()['stores']:
+            if store['enabled'] is True:
+                city = stores.setdefault(store['city'], {})
+                city.update({store['storeNumber']: store['storeName']})
+        file = open('stores', 'wb')
+        pickle.dump(stores, file)
     return stores if select_city is None else stores.get(select_city)
 
 
