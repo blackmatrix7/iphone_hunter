@@ -17,6 +17,7 @@ from extensions import cache, rabbit, r
 __author__ = 'blackmatrix'
 
 
+@cache.cached('buyers', 172800)
 @retry(max_retries=60, sleep=1, callback=logging.error)
 def get_buyers_info():
     """
