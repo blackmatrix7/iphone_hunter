@@ -29,8 +29,10 @@ def get_buyers_info():
         buy_stores = []
         # 获取意向购买城市的零售店
         if buyer.get('city') is not None:
-            logging.info('[猎鹰] 买家目标城市{}'.format(buyer.get('city')))
-            buy_stores.extend(get_apple_stores(buyer['city']).keys())
+            logging.info('[猎鹰] 买家目标城市：{}'.format(buyer.get('city')))
+            city_stores = list(get_apple_stores(buyer['city']).keys())
+            logging.info('[猎鹰] {0}全部店铺：{1}'.format(buyer.get('city'), city_stores))
+            buy_stores.extend(city_stores)
         # 追加特别指定的零售店
         if buyer.get('stores') is not None:
             buy_stores.extend(buyer['stores'])
@@ -66,8 +68,7 @@ def get_apple_stores(select_city=None):
     try:
         file = open('stores', 'rb')
         stores = pickle.load(file)
-    except EOFError as ex:
-        print(type(ex))
+    except EOFError:
         stores = {}
         resp = r.get(current_config['APPLE_STORES_URL'])
         for store in resp.json()['stores']:
