@@ -31,7 +31,7 @@ def get_buyers_info():
         if buyer.get('city') is not None:
             logging.info('[猎鹰] 买家目标城市：{}'.format(buyer.get('city')))
             city_stores = list(get_apple_stores(buyer['city']).keys())
-            logging.info('[猎鹰] {0}全部店铺：{1}'.format(buyer.get('city'), city_stores))
+            logging.info('[猎鹰] {0}全部Apple Store：{1}'.format(buyer.get('city'), city_stores))
             buy_stores.extend(city_stores)
         # 追加特别指定的零售店
         if buyer.get('stores') is not None:
@@ -77,7 +77,7 @@ def get_apple_stores(select_city=None):
                 city.update({store['storeNumber']: store['storeName']})
         file = open('stores', 'wb')
         pickle.dump(stores, file)
-    logging.info('[猎鹰] 获取{}的店铺'.format(select_city))
+    logging.info('[猎鹰] 正在获取{}的Apple Store'.format(select_city))
     return stores if select_city is None else stores.get(select_city)
 
 
