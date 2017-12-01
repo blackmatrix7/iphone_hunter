@@ -319,7 +319,7 @@ class Shoot(AutoTest):
         logging.info('[猎手] 准备进行最后一步预约')
         self.last_step()
 
-    @retry(max_retries=5, delay=1)
+    @retry(max_retries=10, delay=10)
     def last_step(self):
         logging.info('[猎手] 当前链接：{}'.format(self.driver.current_url))
         # 选择预约时间段，默认选择最晚，这样可以最大程度保证及时赶到Apple Store
