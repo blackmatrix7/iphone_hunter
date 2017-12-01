@@ -22,6 +22,8 @@ if __name__ == '__main__':
     if cmdline.command == 'hunter':
         logging.info('[猎手] 已运行')
         from hunter import hunting
+        import datetime
+        cache.set('pcbat@foxmail.com', [{'datetime': datetime.datetime(2017, 12, 1, 17, 15, 18), 'text': '你的注册码为 TB1FKXFN【Apple】', 'send_from': '18521002601'}])
         hunting()
     elif cmdline.command == 'falcon':
         logging.info('[猎鹰] 已运行')
