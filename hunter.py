@@ -387,21 +387,21 @@ send_msg = partial(rabbit.send_message, exchange_name='iphone', queue_name='sms'
 def hunting():
 
     # 从消息队列获取订购信息，如果
-    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyer', routing_key='apple')
+    # @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='buyers', routing_key='apple')
     def start(message=None):
         # message = json.loads(message.decode('utf-8'))
-        message = {'email': 'liyang22333@hotmail.com',
+        message = {'email': current_config.APPLE_ID,
                    'last_name': '李',
                    'model': 'iPhone X',
                    'quantity': 1,
                    'space': '256GB',
                    'first_name': '阳',
-                   'apple_id': 'liyang22333@hotmail.com',
+                   'apple_id': current_config.APPLE_ID,
                    'color': '深空灰色',
                    'idcard': '1111111111111',
-                   'apple_id_pass': 'liyang223336210',
-                   'store': 'R359',
-                   'part_num': 'MQA82CH/A'}
+                   'apple_id_pass': current_config.APPLE_ID_PASS,
+                   'store': 'R645',
+                   'part_num': 'MQA52CH/A'}
         logging.info('[猎手] 进程启动，购买信息：{}'.format(message))
 
         # 选择店铺、机型、和数量
@@ -418,10 +418,10 @@ def hunting():
                 next_url = resp.headers['Location']
                 r.get(next_url)
                 resp = r.post('https://signin.apple.com/appleauth/auth/signin',
-                              json={'accountName': 'xxxxxx@foxmail.com', 'password': 'xxxxxxx', 'rememberMe': False},
-                              headers={'Content-Type': 'application/json'})
-                print(resp)
-                resp = r.get('https://signin.apple.com/IDMSWebAuth/signin', allow_redirects=False)
+                              json={'accountName': current_config.APPLE_ID, 'password': current_config.APPLE_ID_PASS, 'rememberMe': True},
+                              headers={'Content-Type': 'application/json;charset=UTF-8'})
+                resp = r.post(next_url, allow_redirects=False)
+                resp = r.post('https://signin.apple.com/IDMSWebAuth/signin', allow_redirects=False)
                 next_url = resp.headers['Location']
                 resp = r.get(next_url)
                 print(resp)
