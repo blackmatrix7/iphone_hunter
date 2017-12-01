@@ -76,12 +76,12 @@ class CommonConfig(BaseConfig):
     # 购买者信息
     BUYERS = [
         {
-            'first_name': '三', 'last_name': '张', 'idcard': 'xxxxxxxxx',
-            'city': '上海', 'stores': None,
+            'first_name': '修智', 'last_name': '单', 'idcard': '12345678901',
+            'city': '上海', 'stores': None, 'email': 'xxxxxxxxx@hotmail.com',
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
-                    {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'quantity': 2}
+                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 2}
                 ]
         }
     ]

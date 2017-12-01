@@ -17,7 +17,6 @@ from extensions import cache, rabbit, r
 __author__ = 'blackmatrix'
 
 
-@cache.cached('buyers', timeout=345600)
 @retry(max_retries=60, sleep=1, callback=logging.error)
 def get_buyers_info():
     """
@@ -108,7 +107,7 @@ def search_iphone():
                                     logging.info('买家信息：{}'.format(buyer_info))
                                     logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                     # 已经发送过的购买者信息，5分钟内不再发送
-                                    cache.set(key=buyer_info['idcard'], val=True, time=300)
+                                    cache.set(key=buyer_info['idcard'], val='已发送', time=300)
                 else:
                     logging.info('[猎鹰] 没有发现有效库存')
             sleep(3)
