@@ -19,6 +19,14 @@ __author__ = 'blackmatrix'
 client = SMSCenter()
 
 
+@retry(max_retries=10, delay=1)
+def save_sms(apple_id, sms_list):
+    # 将验证码写入缓存，30分钟超时
+    cache.set(apple_id, sms_list, time=1750)
+    if cache.get(apple_id) is None:
+        raise RuntimeError
+
+
 @retry(max_retries=10, delay=30)
 @rabbit.receive_from_rabbitmq(exchange_name='iphone', queue_name='sms', routing_key='apple')
 def send_msg(message=None):
@@ -48,7 +56,7 @@ def send_msg(message=None):
     logging.info('[信使] 已收到短信：{}'.format(sms_list))
 
     # 将验证码写入缓存，30分钟超时
-    cache.set(message['apple_id'], sms_list, time=1750)
+    save_sms(message['apple_id'], sms_list)
     logging.info('[信使] 将短信写入缓存：{}'.format(sms_list))
     # 发送短信后，再次清理所有短信
     client.del_msgs()

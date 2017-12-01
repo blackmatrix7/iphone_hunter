@@ -45,13 +45,13 @@ class AutoTest:
         self.driver.set_window_size(1440, 900)
 
     def element_monkey_patch(self, element):
-
-        for attr in dir(self):
-            if attr.startswith('wait_'):
-                setattr(element, attr, partial(getattr(self, attr), parent=element))
-        # 针对dom元素的部分操作，加入重试方法
-        for attr in ('click', 'submit', 'clear', 'send_keys'):
-            setattr(element, attr, custom_retry()(getattr(element, attr)))
+        pass
+        # for attr in dir(self):
+        #     if attr.startswith('wait_'):
+        #         setattr(element, attr, partial(getattr(self, attr), parent=element))
+        # # 针对dom元素的部分操作，加入重试方法
+        # for attr in ('click', 'submit', 'clear', 'send_keys'):
+        #     setattr(element, attr, custom_retry()(getattr(element, attr)))
 
     def elements_monkey_patch(self, elements):
         try:
@@ -295,19 +295,16 @@ class Shoot(AutoTest):
 
         # 填写手机号码
         input_phone_number = self.wait_find_element_by_xpath(current_config.PHONE_NUMBER_XPATH)
-        input_phone_number.clear()
         input_phone_number.send_keys(phone_number)
         logging.info('[猎手] 已填写手机号码：{}'.format(phone_number))
 
         # 填写注册码
         input_reg_code = self.wait_find_element_by_xpath(current_config.REG_CODE_XPATH)
-        input_reg_code.clear()
         input_reg_code.send_keys(reg_code)
         logging.info('[猎手] 已填写注册码：{}'.format(reg_code))
 
         # 继续
         btn_continue = self.wait_find_element_by_xpath(btn_continue)
-        sleep(1)
         btn_continue.click()
         logging.info('[猎手] 点击继续按钮')
         # 如果出现注册码错误，清理缓存并重试
