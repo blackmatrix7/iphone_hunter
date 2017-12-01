@@ -307,7 +307,6 @@ class Shoot(AutoTest):
 
         # 继续
         btn_continue = self.wait_find_element_by_xpath(btn_continue)
-        sleep(1)
         btn_continue.click()
         logging.info('[猎手] 点击继续按钮')
         # 如果出现注册码错误，清理缓存并重试

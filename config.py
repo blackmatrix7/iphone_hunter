@@ -152,6 +152,7 @@ class CommonConfig(BaseConfig):
                                                               screen_size=screen_size, color=color, space=space)
         return buy_url
 
+
 commoncfg = CommonConfig()
 
 configs = {
