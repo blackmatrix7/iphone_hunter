@@ -307,6 +307,7 @@ class Shoot(AutoTest):
 
         # 继续
         btn_continue = self.wait_find_element_by_xpath(btn_continue)
+        sleep(1)
         btn_continue.click()
         logging.info('[猎手] 点击继续按钮')
         # 如果出现注册码错误，清理缓存并重试
@@ -323,7 +324,7 @@ class Shoot(AutoTest):
         logging.info('[猎手] 当前链接：{}'.format(self.driver.current_url))
         # 选择预约时间段，默认选择最晚，这样可以最大程度保证及时赶到Apple Store
         select_time = Select(self.wait_find_element_by_xpath(current_config.SELECT_TIME_XPATH))
-        logging.info('[猎手] 已找到时间选择下拉框，当前链接：{}'.format(self.driver.current_url))
+        logging.info('[猎手] 已经找到当前链接：{}'.format(self.driver.current_url))
         select_time.select_by_visible_text('下午 8:00 - 下午 8:30')
         logging.info('[猎手] 选择预约时间段：下午 8:00 - 下午 8:30')
 

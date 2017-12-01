@@ -118,7 +118,7 @@ class CommonConfig(BaseConfig):
 
     # selenium 配置
     # 全局超时时间
-    TIME_OUT = 300
+    TIME_OUT = 600
     # 轮询间隔
     POLL_FREQUENCY = 0.2
     # 进程数，不建议超过CPU核数
