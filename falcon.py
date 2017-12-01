@@ -68,7 +68,7 @@ def get_apple_stores(select_city=None):
     try:
         file = open('stores', 'rb')
         stores = pickle.load(file)
-    except EOFError:
+    except (Exception, FileNotFoundError):
         stores = {}
         resp = r.get(current_config['APPLE_STORES_URL'])
         for store in resp.json()['stores']:

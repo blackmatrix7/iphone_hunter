@@ -81,17 +81,7 @@ class CommonConfig(BaseConfig):
             'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
             'models':
                 [
-                    {'model': 'iPhone X', 'color': '深空灰色', 'space': '64GB', 'quantity': 2},
-                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 2}
-                ]
-        },
-        {
-            'first_name': '四', 'last_name': '李', 'idcard': 'xxxxxxxxx',
-            'city': '上海', 'stores': None,
-            'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
-            'models':
-                [
-                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 2}
+                    {'model': 'iPhone X', 'color': '深空灰色', 'space': '256GB', 'quantity': 2}
                 ]
         }
     ]
