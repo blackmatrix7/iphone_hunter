@@ -106,6 +106,9 @@ class CommonConfig(BaseConfig):
         'iPhone X 银色 256GB': 'MQA92CH/A',
     }
 
+    # 微信用户名
+    WECHAT_USER_NAME = '弦'
+
     # 购买时间段
     WATCH_START = datetime.strptime('7:58:00', '%H:%M:%S').time()
     WATCH_END = datetime.strptime('20:30:00', '%H:%M:%S').time()
@@ -151,9 +154,6 @@ class CommonConfig(BaseConfig):
                                                               model_url=model.lower().replace(' ', '-'),
                                                               screen_size=screen_size, color=color, space=space)
         return buy_url
-
-    # 微信用户名
-    WECHAT_USER_NAME = '弦'
 
 
 commoncfg = CommonConfig()

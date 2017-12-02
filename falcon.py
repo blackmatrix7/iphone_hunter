@@ -82,9 +82,37 @@ def get_apple_stores(select_city=None):
     return stores if select_city is None else stores.get(select_city)
 
 
+def get_store_name(store_code):
+    """
+    根据Apple Store编号获取名称
+    :param store_code: 
+    :return: 
+    """
+    stores = get_apple_stores()
+    for city, store in stores.items():
+        for code, name in store.items():
+            if code == store_code:
+                return name
+
+
+def get_model_name(part_num):
+    """
+    根据型号获取设备名称
+    :param part_num: 
+    :return: 
+    """
+    models = current_config.MODELS
+    for model_name, model_part_num in models.items():
+        if model_part_num == part_num:
+            return model_name
+
+
 @retry(max_retries=60, step=0.5, callback=logging.error)
 def search_iphone():
     logging.info('[猎鹰] 开始监控设备库存信息')
+    # 微信好友查找
+    users = itchat.search_friends(name=current_config.WECHAT_USER_NAME)
+    user_name = users[0]['UserName']
     while True:
         now = datetime.now().time()
         # 在有效的时间段内才查询库存
@@ -100,18 +128,18 @@ def search_iphone():
                         # 获取商品型号在店内的库存
                         stock = availability['stores'][store][model_number]
                         if stock['availability']['unlocked'] is True:
-                            logging.info('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number))
                             for buyer_info in buyers_info[store][model_number]:
+                                cache.delcache(buyer_info['idcard'])
                                 if cache.get(buyer_info['idcard']) is None:
                                     buyer_info['store'] = store
                                     with rabbit as mq:
                                         mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
-                                    # 微信提示消息
-                                    users = itchat.search_friends(name=current_config.WECHAT_USER_NAME)
-                                    user_name = users[0]['UserName']
-                                    itchat.send('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number), toUserName=user_name)
+                                    # 日志记录及微信消息发送
+                                    msg = '[猎鹰] 发现目标设备有效库存，商店：{0}， 型号：{1}，时间：{2}'.format(get_store_name(store),  get_model_name(model_number), now.strftime('%H:%M:%S %f'))
+                                    logging.info(msg)
                                     logging.info('买家信息：{}'.format(buyer_info))
                                     logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
+                                    itchat.send(msg, toUserName=user_name)
                                     # 已经发送过的购买者信息，5分钟内不再发送
                                     cache.set(key=buyer_info['idcard'], val='已发送', time=300)
                 else:
