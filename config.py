@@ -152,6 +152,9 @@ class CommonConfig(BaseConfig):
                                                               screen_size=screen_size, color=color, space=space)
         return buy_url
 
+    # 微信用户名
+    WECHAT_USER_NAME = '弦'
+
 
 commoncfg = CommonConfig()
 

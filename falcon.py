@@ -6,6 +6,7 @@
 # @File : falcon.py
 # @Software: PyCharm
 import os
+import itchat
 import pickle
 import logging
 from time import sleep
@@ -105,6 +106,10 @@ def search_iphone():
                                     buyer_info['store'] = store
                                     with rabbit as mq:
                                         mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
+                                    # 微信提示消息
+                                    users = itchat.search_friends(name=current_config.WECHAT_USER_NAME)
+                                    user_name = users[0]['UserName']
+                                    itchat.send('[猎鹰] 发现目标设备有效库存，商店:{0}， 型号{1}'.format(store, model_number), toUserName=user_name)
                                     logging.info('买家信息：{}'.format(buyer_info))
                                     logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                                     # 已经发送过的购买者信息，5分钟内不再发送
