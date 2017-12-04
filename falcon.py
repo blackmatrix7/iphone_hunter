@@ -132,7 +132,7 @@ def search_iphone(wechat_user_name):
                             logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
                             itchat.send(msg, toUserName=wechat_user_name)
                             # 已经发送过的购买者信息，5分钟内不再发送
-                            # cache.set(key=buyer['idcard'], val='已发送', time=300)
+                            cache.set(key=buyer['idcard'], val='已发送', time=300)
         else:
             logging.info('[猎鹰] 没有发现有效库存')
 
