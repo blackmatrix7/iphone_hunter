@@ -28,9 +28,9 @@ if __name__ == '__main__':
         logging.info('[猎鹰] 已运行')
         cache.delete('buyers')
         cache.delete('apple_stores')
-        # itchat.auto_login(hotReload=True)
+        itchat.auto_login(hotReload=True)
         import falcon
-        falcon.search_iphone()
+        falcon.start()
     elif cmdline.command == 'courier':
         logging.info('[信使] 已运行')
         from courier import send_msg

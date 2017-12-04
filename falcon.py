@@ -108,44 +108,47 @@ def get_model_name(part_num):
 
 
 @retry(max_retries=60, step=0.5, callback=logging.error)
-def search_iphone():
+def search_iphone(wechat_user_name):
+    # 购买者的信息，每次循环实时获取最新的购买者信息
+    buyers_info = get_buyers_info()
+    availability = r.get(current_config['IPHONE_MODELS_URL']).json()
+    if availability['stores']:
+        # 遍历意向购买的商店和意向购买的商品
+        for store, models in buyers_info.items():
+            # 遍历意向购买的型号和对应的购买人
+            for model_number, buyers in models.items():
+                # 获取商品型号在店内的库存
+                stock = availability['stores'][store][model_number]
+                if stock['availability']['unlocked'] is True:
+                    for buyer in buyers:
+                        if cache.get(buyer['idcard']) is None:
+                            buyer['store'] = store
+                            with rabbit as mq:
+                                mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer)
+                            # 日志记录及微信消息发送
+                            msg = '[猎鹰] 发现目标设备有效库存，商店：{0}， 型号：{1}，时间'.format(get_store_name(store),  get_model_name(model_number))
+                            logging.info(msg)
+                            logging.info('买家信息：{}'.format(buyer))
+                            logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
+                            itchat.send(msg, toUserName=wechat_user_name)
+                            # 已经发送过的购买者信息，5分钟内不再发送
+                            # cache.set(key=buyer['idcard'], val='已发送', time=300)
+        else:
+            logging.info('[猎鹰] 没有发现有效库存')
+
+
+@retry(max_retries=60, step=0.5, callback=logging.error)
+def start():
     logging.info('[猎鹰] 开始监控设备库存信息')
     # 微信好友查找
-    users = itchat.search_friends(name=current_config.WECHAT_USER_NAME)
-    user_name = users[0]['UserName']
+    wechat_users = itchat.search_friends(name=current_config.WECHAT_USER_NAME)
+    wechat_user_name = wechat_users[0]['UserName']
     while True:
         now = datetime.now().time()
         # 在有效的时间段内才查询库存
         if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
-            # 购买者的信息，每次循环实时获取最新的购买者信息
-            buyers_info = get_buyers_info()
-            availability = r.get(current_config['IPHONE_MODELS_URL']).json()
-            if availability['stores']:
-                # 遍历意向购买的商店和意向购买的商品
-                for store, models in buyers_info.items():
-                    # 遍历意向购买的型号和对应的购买人
-                    for model_number, buyers in models.items():
-                        # 获取商品型号在店内的库存
-                        stock = availability['stores'][store][model_number]
-                        if stock['availability']['unlocked'] is True:
-                            for buyer_info in buyers_info[store][model_number]:
-                                cache.delcache(buyer_info['idcard'])
-                                if cache.get(buyer_info['idcard']) is None:
-                                    buyer_info['store'] = store
-                                    with rabbit as mq:
-                                        mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer_info)
-                                    # 日志记录及微信消息发送
-                                    msg = '[猎鹰] 发现目标设备有效库存，商店：{0}， 型号：{1}，时间：{2}'.format(get_store_name(store),  get_model_name(model_number), now.strftime('%H:%M:%S %f'))
-                                    logging.info(msg)
-                                    logging.info('买家信息：{}'.format(buyer_info))
-                                    logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
-                                    itchat.send(msg, toUserName=user_name)
-                                    # 已经发送过的购买者信息，5分钟内不再发送
-                                    cache.set(key=buyer_info['idcard'], val='已发送', time=300)
-                else:
-                    logging.info('[猎鹰] 没有发现有效库存')
+            search_iphone(wechat_user_name)
             sleep(3)
-
 
 if __name__ == '__main__':
     pass
