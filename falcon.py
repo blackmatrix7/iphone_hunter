@@ -18,6 +18,14 @@ from extensions import cache, rabbit, r
 __author__ = 'blackmatrix'
 
 
+def get_model_number(model_name):
+    try:
+        model_number = current_config['MODELS'][model_name]
+        return model_number
+    except KeyError:
+        raise KeyError('没有找到匹配的型号，请检查参数配置。')
+
+
 @cache.cached('buyers', 172800)
 @retry(max_retries=60, sleep=1, callback=logging.error)
 def get_buyers_info():
@@ -44,9 +52,9 @@ def get_buyers_info():
             store = buyers.setdefault(buy_store, {})
             # 获取意向购买的型号
             for buy_model in buyer['models']:
-                model_number = current_config['MODELS'].get('{0} {1} {2}'.format(buy_model['model'],
-                                                                                 buy_model['color'],
-                                                                                 buy_model['space']))
+                model_number = get_model_number('{0} {1} {2}'.format(buy_model['model'],
+                                                                     buy_model['color'],
+                                                                     buy_model['space']))
                 buy_info = {k: v for k, v in buyer.items() if k in ('last_name', 'first_name', 'idcard',
                                                                     'apple_id', 'apple_id_pass', 'email')}
                 buy_info.update({
