@@ -115,7 +115,6 @@ def get_model_name(part_num):
             return model_name
 
 
-@retry(max_retries=60, step=0.5, callback=logging.error)
 def search_iphone(wechat_user_name):
     # 购买者的信息，每次循环实时获取最新的购买者信息
     buyers_info = get_buyers_info()
