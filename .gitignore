@@ -93,3 +93,4 @@ ENV/
 
 # local config
 localconfig.py
+stores
