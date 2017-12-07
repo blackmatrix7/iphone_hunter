@@ -94,3 +94,5 @@ ENV/
 # local config
 localconfig.py
 stores
+itchat.pkl
+QR.png
