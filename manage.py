@@ -7,7 +7,6 @@
 # @File : cmdline.py
 # @Software: PyCharm
 import os
-import itchat
 import logging
 from extensions import cache
 from toolkit.cmdline import cmdline
@@ -28,7 +27,7 @@ if __name__ == '__main__':
         logging.info('[猎鹰] 已运行')
         cache.delete('buyers')
         cache.delete('apple_stores')
-        itchat.auto_login(hotReload=True)
+        # itchat.auto_login(hotReload=True)
         import falcon
         falcon.start()
     elif cmdline.command == 'courier':

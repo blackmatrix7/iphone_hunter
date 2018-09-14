@@ -5,8 +5,6 @@
 # @Site : 
 # @File : falcon.py
 # @Software: PyCharm
-import os
-import itchat
 import pickle
 import logging
 from time import sleep
@@ -16,10 +14,6 @@ from config import current_config
 from extensions import cache, rabbit, r
 
 __author__ = 'blackmatrix'
-
-# 微信好友查找
-wechat_users = itchat.search_friends(name=current_config.WECHAT_USER_NAME)
-wechat_user_name = wechat_users[0]['UserName']
 
 
 def get_model_number(model_name):
@@ -90,7 +84,6 @@ def get_apple_stores(select_city=None):
                 city.update({store['storeNumber']: store['storeName']})
         file = open('stores', 'wb')
         pickle.dump(stores, file)
-    logging.info('[猎鹰] 正在获取{}的Apple Store'.format(select_city))
     return stores if select_city is None else stores.get(select_city)
 
 
@@ -132,18 +125,22 @@ def search_iphone():
                 stock = availability['stores'][store][model_number]
                 if stock['availability']['unlocked'] is True:
                     for buyer in buyers:
-                        if cache.get(buyer['idcard']) is None:
+                        key = '{}{}{}'.format(buyer['idcard'], store, model_number)
+                        if cache.get(key) is None:
                             buyer['store'] = store
-                            with rabbit as mq:
-                                mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer)
+                            # with rabbit as mq:
+                            #     mq.send_message(exchange_name='iphone', queue_name='buyers', messages=buyer)
                             # 日志记录及微信消息发送
-                            msg = '[猎鹰] 发现目标设备有效库存，商店：{0}， 型号：{1}，时间：{2}'.format(get_store_name(store),  get_model_name(model_number), datetime.now())
+                            msg = '发现有效库存，商店【{0}】， 型号【{1}】，时间【{2}】。'.format(get_store_name(store),
+                                                                            get_model_name(model_number),
+                                                                            datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                            r.get(' http://sc.ftqq.com/{}.send?text=您关注的iPhone已有库存&desp={}'.format(
+                                current_config.SEC_KEY, msg))
                             logging.info(msg)
                             logging.info('买家信息：{}'.format(buyer))
                             logging.info('[猎鹰] 已将目标设备和买家信息发送给猎手')
-                            itchat.send(msg, toUserName=wechat_user_name)
                             # 已经发送过的购买者信息，5分钟内不再发送
-                            cache.set(key=buyer['idcard'], val='已发送', time=300)
+                            cache.set(key=key, val='已发送', time=180)
         else:
             logging.info('[猎鹰] 没有发现有效库存')
 
@@ -151,12 +148,14 @@ def search_iphone():
 @retry(max_retries=60, step=0.5, callback=logging.error)
 def start():
     logging.info('[猎鹰] 开始监控设备库存信息')
+    # 清理缓存
+    cache.flush_all()
     while True:
         now = datetime.now().time()
         # 在有效的时间段内才查询库存
         if current_config['WATCH_START'] <= now <= current_config['WATCH_END']:
             search_iphone()
-            sleep(3)
+            sleep(2)
 
 
 if __name__ == '__main__':

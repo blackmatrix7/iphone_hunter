@@ -51,11 +51,8 @@ class BaseConfig(ConfigMixin):
     # 项目路径
     PROJ_PATH = os.path.abspath('')
 
-default = BaseConfig()
-configs = {'default': default}
 
-
-def get_current_config(config_name=None):
+def get_current_config(configs, config_name=None):
     """
     对本地配置文件的支持，当项目根目录存在localconfig.py文件时
     优先从localconfig.py中读取配置，如果不存在读取config.py的配置。

@@ -16,16 +16,47 @@ class CommonConfig(BaseConfig):
 
     # 项目路径
     PROJ_PATH = os.path.abspath('')
-
-    APPLE_ID = 'xxxxxxxx@hotmail.com'
-    APPLE_ID_PASS = 'xxxxxxxx'
-
+    # 接受预约邮件的邮箱
     EMAIL = 'xxxxxxxx@hotmail.com'
+    # Cache
+    CACHE_MEMCACHED_SERVERS = ['10.10.10.100:32770']
+    # ServerChan
+    SEC_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
     # Apple Store Url
     APPLE_STORES_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/stores.json'
     # iPhone库存
-    IPHONE_MODELS_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhoneX/availability.json'
+    IPHONE_MODELS_URL = 'https://reserve-prime.apple.com/CN/zh_CN/reserve/iPhone/availability.json'
+    # iPhone 型号
+    MODELS = {
+        'iPhone Xs 银色 64GB': 'MT9Q2CH/A',
+        'iPhone Xs 金色 64GB': 'MT9R2CH/A',
+        'iPhone Xs 深空灰色 64GB': 'MT9P2CH/A',
+        'iPhone Xs Max 深空灰色 256GB': 'MT742CH/A',
+        'iPhone Xs Max 银色 256GB': 'MT742CH/A',
+        'iPhone Xs Max 金色 256GB': 'MT762CH/A'
+    }
+
+    # 监控时间段
+    WATCH_START = datetime.strptime('0:01:00', '%H:%M:%S').time()
+    WATCH_END = datetime.strptime('23:59:59', '%H:%M:%S').time()
+    # 购买者信息
+    BUYERS = [
+        {
+            'first_name': '修智', 'last_name': '单', 'idcard': '12345678901',
+            'city': '上海', 'stores': None, 'email': 'xxxxxxxxx@hotmail.com',
+            'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
+            'models':
+                [
+                    {'model': 'iPhone Xs Max', 'color': '银色', 'space': '256GB', 'quantity': 1},
+                    {'model': 'iPhone Xs Max', 'color': '金色', 'space': '256GB', 'quantity': 1},
+                    {'model': 'iPhone Xs Max', 'color': '深空灰色', 'space': '256GB', 'quantity': 1},
+                    # {'model': 'iPhone Xs', 'color': '银色', 'space': '64GB', 'quantity': 1},
+                    # {'model': 'iPhone Xs', 'color': '金色', 'space': '64GB', 'quantity': 1},
+                    # {'model': 'iPhone Xs', 'color': '深空灰色', 'space': '64GB', 'quantity': 1},
+                ]
+        }
+    ]
 
     # Apple Xpath
     SELECT_QUANTITY = '//*[@id="quantity"]'
@@ -73,46 +104,6 @@ class CommonConfig(BaseConfig):
     SEND_TO = '106550218370001'
     PHONE_NUMBER = '18888888888'
 
-    # 购买者信息
-    BUYERS = [
-        {
-            'first_name': '修智', 'last_name': '单', 'idcard': '12345678901',
-            'city': '上海', 'stores': None, 'email': 'xxxxxxxxx@hotmail.com',
-            'apple_id': 'xxxxxxxxxx', 'apple_id_pass': 'xxxxxxx',
-            'models':
-                [
-                    {'model': 'iPhone X', 'color': '银色', 'space': '256GB', 'quantity': 2}
-                ]
-        }
-    ]
-
-    # iPhone 型号
-    MODELS = {
-        'iPhone 8 银色 64GB': 'MQ6L2CH/A',
-        'iPhone 8 银色 256GB': 'MQ7G2CH/A',
-        'iPhone 8 金色 64GB': 'MQ6M2CH/A',
-        'iPhone 8 金色 256GB': 'MQ7H2CH/A',
-        'iPhone 8 深空灰色 64GB': 'MQ6K2CH/A',
-        'iPhone 8 深空灰色 256GB': 'MQ7F2CH/A',
-        'iPhone 8 Plus 银色 64GB': 'MQ8E2CH/A',
-        'iPhone 8 Plus 银色 256GB': 'MQ8H2CH/A',
-        'iPhone 8 Plus 金色 64GB': 'MQ8F2CH/A',
-        'iPhone 8 Plus 金色 256GB': 'MQ8J2CH/A',
-        'iPhone 8 Plus 深空灰色 64GB': 'MQ8D2CH/A',
-        'iPhone 8 Plus 深空灰色 256GB': 'MQ8G2CH/A',
-        'iPhone X 深空灰色 64GB': 'MQA52CH/A',
-        'iPhone X 深空灰色 256GB': 'MQA82CH/A',
-        'iPhone X 银色 64GB': 'MQA62CH/A',
-        'iPhone X 银色 256GB': 'MQA92CH/A',
-    }
-
-    # 微信用户名
-    WECHAT_USER_NAME = '弦'
-
-    # 购买时间段
-    WATCH_START = datetime.strptime('7:58:00', '%H:%M:%S').time()
-    WATCH_END = datetime.strptime('20:30:00', '%H:%M:%S').time()
-
     APPLE_INDEX = 'https://www.apple.com/cn/'
     APPLE_FLYOUT_AJAX = 'https://www.apple.com/cn/shop/bag/flyout?apikey={}&l=https%3A%2F%2Fwww.apple.com%2Fcn%2F'
     APPLE_SING_IN = 'https://{}/cn/shop/sentryx/sign_in'
@@ -135,9 +126,6 @@ class CommonConfig(BaseConfig):
     RABBITMQ_PORT = 5672
     RABBITMQ_USER = 'user'
     RABBITMQ_PASS = '123456'
-
-    # Cache
-    CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
 
     def get_buy_url(self, model, color, space):
 
@@ -165,4 +153,4 @@ configs = {
 # 读取配置文件的名称，在具体的应用中，可以从环境变量、命令行参数等位置获取配置文件名称
 config_name = 'default'
 
-current_config = get_current_config(config_name)
+current_config = get_current_config(configs, config_name)
