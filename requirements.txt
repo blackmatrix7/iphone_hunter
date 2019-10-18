@@ -6,4 +6,4 @@ python-gammu==2.9
 python3-memcached==1.51
 requests==2.18.4
 selenium==3.5.0
-urllib3==1.22
+urllib3==1.24.2
